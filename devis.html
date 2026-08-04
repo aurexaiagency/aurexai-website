@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demande de devis - AUREX AI</title>
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#050505;
+color:white;
+max-width:700px;
+margin:40px auto;
+padding:20px;
+}
+input,textarea{
+width:100%;
+padding:15px;
+margin:10px 0;
+background:#111;
+color:white;
+border:1px solid #333;
+border-radius:8px;
+}
+button{
+width:100%;
+padding:15px;
+background:white;
+color:black;
+font-weight:bold;
+border:none;
+border-radius:8px;
+font-size:18px;
+cursor:pointer;
+}
+h1{text-align:center;}
+</style>
+</head>
+<body>
+
+<h1>Demande de devis</h1>
+
+<form action="mailto:kasalieb@gmail.com" method="post" enctype="text/plain">
+<input type="text" name="Nom" placeholder="Votre nom" required>
+<input type="email" name="Email" placeholder="Votre email" required>
+<input type="text" name="Entreprise" placeholder="Entreprise">
+<textarea name="Projet" rows="8" placeholder="Décrivez votre projet"></textarea>
+<button type="submit">Envoyer la demande</button>
+</form>
+
+</body>
+</html>
