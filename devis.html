@@ -40,7 +40,7 @@ h1{text-align:center;}
 
 <h1>Demande de devis</h1>
 
-<form name="demande-devis" method="POST" data-netlify="true" action="/">
+<form name="demande-devis" method="POST" data-netlify="true" action="/merci.html">
 <input type="hidden" name="form-name" value="demande-devis">
 <input type="text" name="Nom" placeholder="Votre nom" required>
 <input type="email" name="Email" placeholder="Votre email" required>
@@ -48,12 +48,6 @@ h1{text-align:center;}
 <textarea name="Projet" rows="8" placeholder="Décrivez votre projet"></textarea>
 <button type="submit">Envoyer la demande</button>
 </form>
-<script>
-document.querySelector('form').addEventListener('submit', function () {
-  setTimeout(function () {
-    window.location.href = "merci.html";
-  }, 1000);
-});
-</script>
+
 </body>
 </html>
