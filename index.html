@@ -110,10 +110,22 @@ Contactez AUREX AI.
 © 2026 AUREX AI — AI Automation Agency
 </footer>
 <script>
-document.querySelector('form').addEventListener('submit', function () {
-  setTimeout(function () {
-    window.location.href = "merci.html";
-  }, 1000);
+document.querySelector('form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  await fetch('https://hook.eu1.make.com/sfztda9h3dqfk6tvbaud9mrapf13smwi', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      nom: document.getElementById('demoNom').value,
+      email: document.getElementById('demoEmail').value,
+      demande: document.getElementById('demoProjet').value
+    })
+  });
+
+  window.location.href = "merci.html";
 });
 </script>
 </body>
