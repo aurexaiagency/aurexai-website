@@ -110,22 +110,23 @@ Contactez AUREX AI.
 © 2026 AUREX AI — AI Automation Agency
 </footer>
 <script>
-document.querySelector('form').addEventListener('submit', async function(e) {
+document.getElementById('demoForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
-  await fetch('https://hook.eu1.make.com/sfztda9h3dqfk6tvbaud9mrapf13smwi', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      nom: document.getElementById('demoNom').value,
-      email: document.getElementById('demoEmail').value,
-      demande: document.getElementById('demoProjet').value
-    })
-  });
+  const nom = document.getElementById('demoNom').value;
+  const demande = document.getElementById('demoProjet').value;
+  const resultat = document.getElementById('demoResultat');
 
-  window.location.href = "merci.html";
+  resultat.style.display = 'block';
+  resultat.innerHTML =
+    '<strong>✓ Démonstration AUREX AI</strong><br><br>' +
+    'Bonjour ' + nom + ',<br><br>' +
+    'Votre demande a été analysée :<br>' +
+    '<strong>' + demande + '</strong><br><br>' +
+    '✓ Demande client reçue<br>' +
+    '✓ Informations analysées automatiquement<br>' +
+    '✓ Réponse instantanée possible 24h/24<br>' +
+    '✓ Prospect prêt à être transmis à votre entreprise';
 });
 </script>
 </body>
