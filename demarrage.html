@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Démarrage de votre projet - AUREX AI</title>
+  <meta name="description" content="Démarrez votre projet AUREX AI après votre commande.">
+
+  <style>
+    :root{
+      --bg:#050505;
+      --card:#0d0f0f;
+      --text:#ffffff;
+      --muted:#a7b0ad;
+      --line:#202624;
+      --accent:#5cffb0;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial,Helvetica,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+
+    .wrap{
+      width:min(760px,calc(100% - 32px));
+      margin:0 auto;
+      padding:32px 0 56px;
+    }
+
+    .brand{
+      font-weight:800;
+      letter-spacing:.08em;
+      margin-bottom:28px;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:7px 12px;
+      border:1px solid #24543e;
+      border-radius:999px;
+      color:var(--accent);
+      font-size:13px;
+      margin-bottom:18px;
+    }
+
+    h1{
+      font-size:clamp(32px,7vw,54px);
+      line-height:1.05;
+      margin:0 0 16px;
+    }
+
+    .intro{
+      color:var(--muted);
+      font-size:17px;
+      margin-bottom:28px;
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:22px;
+    }
+
+    label{
+      display:block;
+      font-weight:700;
+      margin:18px 0 8px;
+    }
+
+    input,select,textarea{
+      width:100%;
+      padding:14px 15px;
+      border:1px solid #2a3230;
+      border-radius:10px;
+      background:#111514;
+      color:#fff;
+      font-size:16px;
+    }
+
+    textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+
+    button{
+      width:100%;
+      margin-top:22px;
+      padding:15px;
+      border:0;
+      border-radius:10px;
+      background:var(--accent);
+      color:#06120c;
+      font-weight:800;
+      font-size:17px;
+      cursor:pointer;
+    }
+
+    .note{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .back{
+      display:inline-block;
+      margin-top:22px;
+      color:#fff;
+      text-decoration:none;
+      border-bottom:1px solid #666;
+    }
+
+    .hidden{
+      display:none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="wrap">
+
+    <div class="brand">↗ AUREX AI</div>
+
+    <div class="badge">✓ ÉTAPE DE DÉMARRAGE</div>
+
+    <h1>Votre projet commence ici.</h1>
+
+    <p class="intro">
+      Merci pour votre confiance. Remplissez ce formulaire avec les informations utiles
+      pour que nous puissions préparer votre solution AUREX AI.
+    </p>
+
+    <section class="card">
+
+      <form
+        name="demarrage-client"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        action="/merci.html"
+      >
+
+        <input type="hidden" name="form-name" value="demarrage-client">
+
+        <p class="hidden">
+          <label>
+            Ne pas remplir :
+            <input name="bot-field">
+          </label>
+        </p>
+
+        <label for="nom">Votre nom *</label>
+        <input id="nom" name="Nom" type="text" required>
+
+        <label for="email">Votre e-mail *</label>
+        <input id="email" name="Email" type="email" required>
+
+        <label for="entreprise">Entreprise / marque *</label>
+        <input id="entreprise" name="Entreprise" type="text" required>
+
+        <label for="site">Site web ou réseau social</label>
+        <input id="site" name="Site" type="url" placeholder="https://">
+
+        <label for="offre">Offre achetée *</label>
+
+        <select id="offre" name="Offre" required>
+          <option value="">Choisir une offre</option>
+          <option>Acquisition clients par IA — 697 €</option>
+          <option>Agent IA personnalisé — 997 €</option>
+          <option>Accompagnement mensuel — 497 €/mois</option>
+          <option>Autre / offre personnalisée</option>
+        </select>
+
+        <label for="langue">Langue principale *</label>
+
+        <select id="langue" name="Langue" required>
+          <option value="">Choisir</option>
+          <option>Français</option>
+          <option>Anglais</option>
+          <option>Français + Anglais</option>
+          <option>Autre</option>
+        </select>
+
+        <label for="objectif">Objectif principal *</label>
+
+        <textarea
+          id="objectif"
+          name="Objectif"
+          required
+          placeholder="Ex. répondre automatiquement aux prospects, qualifier les demandes, automatiser le suivi..."
+        ></textarea>
+
+        <label for="activite">
+          Présentez brièvement votre activité *
+        </label>
+
+        <textarea
+          id="activite"
+          name="Activite"
+          required
+          placeholder="Que vendez-vous ? À quels clients ?"
+        ></textarea>
+
+        <label for="faq">
+          Questions fréquentes de vos clients
+        </label>
+
+        <textarea
+          id="faq"
+          name="Questions_frequentes"
+          placeholder="Ajoutez les questions auxquelles votre assistant devra savoir répondre."
+        ></textarea>
+
+        <label for="infos">
+          Informations ou consignes importantes
+        </label>
+
+        <textarea
+          id="infos"
+          name="Informations_importantes"
+          placeholder="Horaires, zones desservies, ton souhaité, restrictions, liens utiles..."
+        ></textarea>
+
+        <button type="submit">
+          Envoyer mes informations →
+        </button>
+
+        <p class="note">
+          N'envoyez jamais de mot de passe, clé API, numéro complet de carte bancaire
+          ou autre donnée bancaire sensible dans ce formulaire.
+        </p>
+
+      </form>
+
+    </section>
+
+    <a class="back" href="/">
+      ← Retour au site
+    </a>
+
+  </main>
+
+</body>
+</html>
