@@ -245,6 +245,14 @@
     </a>
 
   </main>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get("session_id");
+  const stripeField = document.getElementById("stripe_session_id");
 
+  if (sessionId && stripeField) {
+    stripeField.value = sessionId;
+  }
+</script>
 </body>
 </html>
