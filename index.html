@@ -5,59 +5,151 @@
 <meta name="description" content="AUREX AI — automatisations, agents IA et acquisition pour entreprises en France et à l'international.">
 <title>AUREX AI — Automatisation & Intelligence Artificielle</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Arial,sans-serif;background:#050505;color:#fff;line-height:1.6}nav{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:18px 7%;background:#050505ee;border-bottom:1px solid #222}.logo{font-size:24px;font-weight:900}.nav{display:flex;gap:20px;align-items:center}.nav a{color:#ddd;text-decoration:none}.lang{background:#111;color:#fff;border:1px solid #444;border-radius:9px;padding:8px 11px}.hero,section{padding:80px 7%}.hero{padding-top:105px;max-width:1200px}.badge,.eye{color:#35e887;font-weight:bold}.badge{display:inline-block;border:1px solid #287d51;border-radius:99px;padding:8px 14px;margin-bottom:25px;font-size:13px}h1{font-size:clamp(48px,8vw,96px);line-height:.95;margin-bottom:28px}h2{font-size:clamp(34px,5vw,56px);line-height:1.05;margin-bottom:16px}.lead,.hero p,.card p,.step p{color:#aaa}.hero p{font-size:21px;max-width:760px;margin-bottom:30px}.btn{display:inline-block;background:#fff;color:#000;text-decoration:none;font-weight:bold;padding:16px 22px;border-radius:10px;border:0}.ghost{background:transparent;color:#fff;border:1px solid #444;margin-left:10px}.intl{padding:0 7% 60px;color:#777}.head{max-width:780px;margin-bottom:35px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card,.box{background:#0d0d0d;border:1px solid #292929;border-radius:18px;padding:28px}.card{display:flex;flex-direction:column}.card h3{font-size:25px}.price{font-size:27px;font-weight:900;margin:10px 0}.features{list-style:none;margin:15px 0 24px}.features li{margin:7px 0}.features li:before{content:"✓";color:#35e887;margin-right:8px}.card .btn{margin-top:auto;text-align:center}.process{background:#0d0d0d}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.step{border-left:1px solid #444;padding:10px 18px}.step strong{color:#35e887}.grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}input,textarea{width:100%;padding:16px;margin:8px 0;background:#111;color:#fff;border:1px solid #444;border-radius:10px;font:inherit}textarea{min-height:125px}.result{display:none;margin-top:16px;padding:18px;border:1px solid #287d51;color:#dfffea;border-radius:12px;white-space:pre-line}.monthly{background:#09110c;border-block:1px solid #173824}.big{font-size:42px;font-weight:900}.contact{text-align:center}.contact .box{max-width:800px;margin:auto}footer{padding:28px 7%;border-top:1px solid #222;color:#777}.chatBtn{position:fixed;right:15px;bottom:15px;border:0;border-radius:99px;background:#fff;color:#000;padding:14px 18px;font-weight:bold}.chat{display:none;position:fixed;right:15px;bottom:75px;width:min(380px,calc(100vw - 24px));background:#0c0c0c;border:1px solid #333;border-radius:18px;overflow:hidden;z-index:20}.chat.open{display:block}.chatHead{padding:15px;border-bottom:1px solid #292929}.msgs{height:280px;overflow:auto;padding:15px}.msg{padding:10px 12px;margin:8px 0;border-radius:12px;background:#171717;white-space:pre-line}.user{background:#fff;color:#000;margin-left:15%}.quick{padding:0 12px 10px}.quick button{background:#111;color:#ddd;border:1px solid #333;border-radius:99px;padding:7px;margin:3px}.chat form{display:flex;padding:10px;border-top:1px solid #292929}.chat form input{margin:0}.chat form button{width:50px}.eye{font-size:13px;text-transform:uppercase;letter-spacing:1px}
-@media(max-width:850px){.cards,.steps,.grid{grid-template-columns:1fr}.nav a{display:none}}@media(max-width:600px){nav{padding:15px 6%}.hero,section{padding:60px 6%}.hero h1{font-size:40px;line-height:1.02}.hero p,.lead{font-size:18px}.btn,.ghost{width:100%;text-align:center;margin:6px 0}.intl{padding:0 6% 45px}}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:Arial,sans-serif;background:#050505;color:#fff;line-height:1.6;padding-bottom:90px}
+nav{position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:18px 7%;background:#050505f2;border-bottom:1px solid #222;backdrop-filter:blur(10px)}
+.logo{font-size:24px;font-weight:900}.nav{display:flex;gap:20px;align-items:center}.nav a{color:#ddd;text-decoration:none}
+.lang{background:#111;color:#fff;border:1px solid #444;border-radius:9px;padding:8px 11px}
+.hero,section{padding:80px 7%;scroll-margin-top:90px}.hero{padding-top:105px;max-width:1200px}
+.badge,.eye{color:#35e887;font-weight:bold}.badge{display:inline-block;border:1px solid #287d51;border-radius:99px;padding:8px 14px;margin-bottom:25px;font-size:13px}
+h1{font-size:clamp(48px,8vw,96px);line-height:.95;margin-bottom:28px}h2{font-size:clamp(34px,5vw,56px);line-height:1.05;margin-bottom:16px}
+.lead,.hero p,.card p,.step p{color:#aaa}.hero p{font-size:21px;max-width:760px;margin-bottom:30px}
+.btn{display:inline-block;background:#fff;color:#000;text-decoration:none;font-weight:bold;padding:16px 22px;border-radius:10px;border:0;cursor:pointer}
+.ghost{background:transparent;color:#fff;border:1px solid #444;margin-left:10px}.intl{padding:0 7% 60px;color:#777}.head{max-width:780px;margin-bottom:35px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card,.box{background:#0d0d0d;border:1px solid #292929;border-radius:18px;padding:28px}
+.card{display:flex;flex-direction:column}.card h3{font-size:25px}.price{font-size:27px;font-weight:900;margin:10px 0}
+.features{list-style:none;margin:15px 0 24px}.features li{margin:7px 0}.features li:before{content:"✓";color:#35e887;margin-right:8px}.card .btn{margin-top:auto;text-align:center}
+.process{background:#0d0d0d}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.step{border-left:1px solid #444;padding:10px 18px}.step strong{color:#35e887}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}input,textarea{width:100%;padding:16px;margin:8px 0;background:#111;color:#fff;border:1px solid #444;border-radius:10px;font:inherit}
+textarea{min-height:125px}.result{display:none;margin-top:16px;padding:18px;border:1px solid #287d51;color:#dfffea;border-radius:12px;white-space:pre-line}
+.monthly{background:#09110c;border-block:1px solid #173824}.big{font-size:42px;font-weight:900}.contact{text-align:center}.contact .box{max-width:800px;margin:auto}
+footer{padding:28px 7%;border-top:1px solid #222;color:#777}.notice{margin-top:10px;color:#777;font-size:13px}
+.chatBtn{position:fixed;right:16px;bottom:16px;z-index:40;border:0;border-radius:99px;background:#fff;color:#000;padding:14px 18px;font-weight:bold;box-shadow:0 10px 30px #0008}
+.chat{display:none;position:fixed;right:16px;bottom:82px;width:min(390px,calc(100vw - 24px));background:#0c0c0c;border:1px solid #333;border-radius:18px;overflow:hidden;z-index:50;box-shadow:0 20px 60px #000a}
+.chat.open{display:block}.chatHead{padding:15px;border-bottom:1px solid #292929;display:flex;justify-content:space-between;align-items:center}.closeChat{background:transparent;color:#fff;border:0;font-size:22px}
+.msgs{height:300px;overflow:auto;padding:15px}.msg{padding:10px 12px;margin:8px 0;border-radius:12px;background:#171717;white-space:pre-line}.user{background:#fff;color:#000;margin-left:15%}
+.quick{padding:0 12px 10px}.quick button{background:#111;color:#ddd;border:1px solid #333;border-radius:99px;padding:7px;margin:3px}.chat form{display:flex;padding:10px;border-top:1px solid #292929}.chat form input{margin:0}.chat form button{width:50px}
+.eye{font-size:13px;text-transform:uppercase;letter-spacing:1px}.typing{opacity:.65;font-style:italic}
+@media(max-width:850px){.cards,.steps,.grid{grid-template-columns:1fr}.nav a{display:none}}
+@media(max-width:600px){nav{padding:15px 6%}.hero,section{padding:60px 6%}.hero{padding-top:80px}.hero h1{font-size:40px;line-height:1.02}.hero p,.lead{font-size:18px}.btn,.ghost{width:100%;text-align:center;margin:6px 0}.intl{padding:0 6% 45px}.chatBtn{right:12px;bottom:12px;padding:13px 16px;font-size:14px}.chat{right:12px;bottom:72px;width:calc(100vw - 24px)}}
 </style></head>
 <body>
 <nav><div class="logo">↗ AUREX AI</div><div class="nav"><a href="#services">Services</a><a href="#process" id="processNav">Méthode</a><a href="#contact">Contact</a><button class="lang" id="lang">EN</button></div></nav>
-<header class="hero"><div class="badge">● AUREX AI — AUTOMATION & INTELLIGENCE</div><h1 id="title">AUTOMATISEZ.<br>GAGNEZ DU TEMPS.<br>DÉVELOPPEZ VOTRE ENTREPRISE.</h1><p id="intro">AUREX AI conçoit des systèmes d'intelligence artificielle pour automatiser vos opérations, répondre plus vite à vos clients et accélérer votre croissance.</p><a class="btn" href="#services" id="discover">DÉCOUVRIR NOS SOLUTIONS →</a><a class="btn ghost" href="devis.html" id="quote">DEMANDER UN DEVIS</a></header>
+
+<header class="hero">
+<div class="badge">● AUREX AI — AUTOMATION & INTELLIGENCE</div>
+<h1 id="title">AUTOMATISEZ.<br>GAGNEZ DU TEMPS.<br>DÉVELOPPEZ VOTRE ENTREPRISE.</h1>
+<p id="intro">AUREX AI conçoit des systèmes d'intelligence artificielle pour automatiser vos opérations, répondre plus vite à vos clients et accélérer votre croissance.</p>
+<a class="btn" href="#services" id="discover">DÉCOUVRIR NOS SOLUTIONS →</a>
+<a class="btn ghost" href="devis.html" id="quote">DEMANDER UN DEVIS</a>
+</header>
+
 <div class="intl" id="intl">France • Europe • International — accompagnement à distance</div>
-<section id="services"><div class="head"><div class="eye" id="eye1">Solutions</div><h2 id="st">Des systèmes IA pensés pour produire un résultat concret.</h2><p class="lead" id="sl">Chaque solution est adaptée à votre activité, vos outils et vos objectifs.</p></div><div class="cards">
-<div class="card"><h3 id="a1">Automatisation IA</h3><div class="price" id="p1">À partir de 497 €</div><p id="d1">Automatisez les tâches répétitives et les flux qui ralentissent votre équipe.</p><ul class="features"><li>Traitement de demandes</li><li>Suivis et relances</li><li>Connexion de vos outils</li></ul><a class="btn choose" href="devis.html?offre=automatisation">CHOISIR CETTE SOLUTION</a></div>
-<div class="card"><h3 id="a2">Agent IA personnalisé</h3><div class="price" id="p2">À partir de 997 €</div><p id="d2">Un assistant IA adapté à votre entreprise pour vos équipes ou vos clients.</p><ul class="features"><li>Support client 24h/24</li><li>Qualification des demandes</li><li>Réponses personnalisées</li></ul><a class="btn choose" href="devis.html?offre=agent">CHOISIR CETTE SOLUTION</a></div>
-<div class="card"><h3 id="a3">Acquisition clients par IA</h3><div class="price" id="p3">À partir de 697 €</div><p id="d3">Structurez votre prospection et vos relances avec des automatisations intelligentes.</p><ul class="features"><li>Qualification de prospects</li><li>Séquences de relance</li><li>Suivi des opportunités</li></ul><a class="btn choose" href="devis.html?offre=acquisition">CHOISIR CETTE SOLUTION</a></div>
+
+<section id="services">
+<div class="head"><div class="eye">Solutions</div><h2 id="st">Des systèmes IA pensés pour produire un résultat concret.</h2><p class="lead" id="sl">Chaque solution est adaptée à votre activité, vos outils et vos objectifs.</p></div>
+<div class="cards">
+<div class="card"><h3 id="a1">Automatisation IA</h3><div class="price" id="p1">À partir de 497 €</div><p id="d1">Automatisez les tâches répétitives et les flux qui ralentissent votre équipe.</p><ul class="features"><li id="f11">Traitement de demandes</li><li id="f12">Suivis et relances</li><li id="f13">Connexion de vos outils</li></ul><a class="btn choose" id="choose1" href="devis.html?offre=automatisation">CHOISIR CETTE SOLUTION</a></div>
+<div class="card"><h3 id="a2">Agent IA personnalisé</h3><div class="price" id="p2">À partir de 997 €</div><p id="d2">Un assistant IA adapté à votre entreprise pour vos équipes ou vos clients.</p><ul class="features"><li id="f21">Support client 24h/24</li><li id="f22">Qualification des demandes</li><li id="f23">Réponses personnalisées</li></ul><a class="btn choose" id="pay997" href="https://buy.stripe.com/14A5kC5S46Vj6O55bL7kc02">PAYER 997 €</a></div>
+<div class="card"><h3 id="a3">Acquisition clients par IA</h3><div class="price" id="p3">À partir de 697 €</div><p id="d3">Structurez votre prospection et vos relances avec des automatisations intelligentes.</p><ul class="features"><li id="f31">Qualification de prospects</li><li id="f32">Séquences de relance</li><li id="f33">Suivi des opportunités</li></ul><a class="btn choose" id="pay697" href="https://buy.stripe.com/eVqeVc6W86Vj2xP8nX7kc01">PAYER 697 €</a></div>
 </div></section>
-<section class="process" id="process"><div class="head"><div class="eye" id="me">Notre méthode</div><h2 id="mt">Simple, rapide et adapté à votre entreprise.</h2></div><div class="steps"><div class="step"><strong>01</strong><h3>Audit</h3><p>Nous identifions les tâches à automatiser et les gains possibles.</p></div><div class="step"><strong>02</strong><h3>Conception</h3><p>Nous construisons le système adapté à votre fonctionnement.</p></div><div class="step"><strong>03</strong><h3>Mise en place</h3><p>Nous connectons, testons et déployons la solution.</p></div><div class="step"><strong>04</strong><h3>Optimisation</h3><p>Nous suivons les performances et améliorons le système.</p></div></div></section>
-<section><div class="grid"><div><div class="eye" id="de">Démonstration</div><h2 id="dt">Voyez comment AUREX AI traite une demande client.</h2><p class="lead" id="dl">Cette simulation montre le type de parcours qui peut être automatisé dans votre entreprise.</p></div><form class="box" id="demo"><input id="name" placeholder="Nom du client" required><input type="email" placeholder="Email" required><textarea id="need" placeholder="Décrivez une demande client" required></textarea><button class="btn" style="width:100%" id="db">LANCER LA DÉMONSTRATION →</button><div class="result" id="result"></div></form></div></section>
-<section class="monthly"><div class="grid"><div><div class="eye" id="se">Suivi continu</div><h2 id="su">Accompagnement mensuel AUREX AI</h2><p class="lead" id="sd">Maintenance, optimisation et assistance pour garder votre système performant.</p></div><div class="box"><div class="big">497 € <small id="pm">/ mois</small></div><ul class="features"><li>Maintenance et suivi continu</li><li>Optimisations régulières</li><li>Assistance en cas de problème</li><li>Améliorations du système</li></ul><a class="btn" style="width:100%" href="https://buy.stripe.com/4gM8wO1BO0wV8WdcEd7kc00" id="sub">S'ABONNER — 497 €/MOIS</a></div></div></section>
+
+<section class="process" id="process"><div class="head"><div class="eye" id="me">Notre méthode</div><h2 id="mt">Simple, rapide et adapté à votre entreprise.</h2></div><div class="steps"><div class="step"><strong>01</strong><h3 id="s1t">Audit</h3><p id="s1p">Nous identifions les tâches à automatiser et les gains possibles.</p></div><div class="step"><strong>02</strong><h3 id="s2t">Conception</h3><p id="s2p">Nous construisons le système adapté à votre fonctionnement.</p></div><div class="step"><strong>03</strong><h3 id="s3t">Mise en place</h3><p id="s3p">Nous connectons, testons et déployons la solution.</p></div><div class="step"><strong>04</strong><h3 id="s4t">Optimisation</h3><p id="s4p">Nous suivons les performances et améliorons le système.</p></div></div></section>
+
+<section><div class="grid"><div><div class="eye" id="de">Démonstration</div><h2 id="dt">Voyez comment AUREX AI traite une demande client.</h2><p class="lead" id="dl">Cette simulation montre le type de parcours qui peut être automatisé dans votre entreprise.</p></div><form class="box" id="demo"><input id="name" placeholder="Nom du client" required><input type="email" placeholder="Email" required><textarea id="need" placeholder="Décrivez une demande client" required></textarea><button type="submit" class="btn" style="width:100%" id="db">LANCER LA DÉMONSTRATION →</button><div class="result" id="result"></div></form></div></section>
+
+<section class="monthly"><div class="grid"><div><div class="eye" id="se">Suivi continu</div><h2 id="su">Accompagnement mensuel AUREX AI</h2><p class="lead" id="sd">Maintenance, optimisation et assistance pour garder votre système performant.</p></div><div class="box"><div class="big">497 € <small id="pm">/ mois</small></div><ul class="features"><li id="m1">Maintenance et suivi continu</li><li id="m2">Optimisations régulières</li><li id="m3">Assistance en cas de problème</li><li id="m4">Améliorations du système</li></ul><a class="btn" style="width:100%" href="https://buy.stripe.com/4gM8wO1BO0wV8WdcEd7kc00" target="_blank" rel="noopener" id="sub">S'ABONNER — 497 €/MOIS</a><p class="notice" id="stripeNotice">Paiement sécurisé via Stripe.</p></div></div></section>
+
 <section class="contact" id="contact"><div class="box"><div class="eye" id="ce">Parlons de votre projet</div><h2 id="ct">Construisons un système IA utile à votre entreprise.</h2><p class="lead" style="margin:0 auto 25px" id="cd">Décrivez votre besoin. Nous vous recontactons pour définir la solution adaptée.</p><a class="btn" href="devis.html" id="cq">DEMANDER UN DEVIS →</a></div></section>
-<footer>© 2026 AUREX AI — AI Automation Agency • <span id="fi">France • Europe • International</span></footer>
-<button class="chatBtn" id="open">💬 Assistant</button><div class="chat" id="chat"><div class="chatHead"><b>AUREX AI Assistant</b> <span style="color:#35e887">●</span></div><div class="msgs" id="msgs"></div><div class="quick"><button data-i="services">Offres</button><button data-i="price">Tarifs</button><button data-i="world">International</button><button data-i="quote">Devis</button></div><form id="cf"><input id="ci" placeholder="Votre question…"><button>→</button></form></div>
+
+<footer>© 2026 AUREX AI — AI Automation Agency • <span id="fi">France • Europe • International</span><br><a href="mentions-legales.html" id="legal1" style="color:#aaa">Mentions légales</a> • <a href="confidentialite.html" id="legal2" style="color:#aaa">Confidentialité</a> • <a href="conditions.html" id="legal3" style="color:#aaa">Conditions</a></footer>
+
+<button class="chatBtn" id="open" aria-expanded="false">💬 Assistant IA</button>
+<div class="chat" id="chat" role="dialog" aria-label="Assistant IA AUREX AI">
+<div class="chatHead"><b>AUREX AI Assistant <span style="color:#35e887">●</span></b><button class="closeChat" id="closeChat" aria-label="Fermer">×</button></div>
+<div class="msgs" id="msgs"></div>
+<div class="quick"><button type="button" id="q1" data-q="Présente-moi vos offres">Offres</button><button type="button" id="q2" data-q="Quels sont vos tarifs ?">Tarifs</button><button type="button" id="q3" data-q="Travaillez-vous à l'international ?">International</button><button type="button" id="q4" data-q="Comment demander un devis ?">Devis</button></div>
+<form id="cf"><input id="ci" placeholder="Votre question…" autocomplete="off" maxlength="1000"><button type="submit">→</button></form>
+</div>
+
 <script>
 let L=localStorage.getItem("aurex-lang")||"fr";
-const EN={title:"AUTOMATE.<br>SAVE TIME.<br>GROW YOUR BUSINESS.",intro:"AUREX AI builds AI systems that automate operations, help you respond faster to customers and support business growth.",discover:"EXPLORE OUR SOLUTIONS →",quote:"REQUEST A QUOTE",intl:"France • Europe • Worldwide — remote delivery available",st:"AI systems designed around concrete business outcomes.",sl:"Every solution is adapted to your workflow, tools and objectives.",a1:"AI Automation",p1:"From €497",d1:"Automate repetitive tasks and operational workflows.",a2:"Custom AI Agent",p2:"From €997",d2:"A tailored AI assistant for your customers or internal team.",a3:"AI Client Acquisition",p3:"From €697",d3:"Structure outreach and follow-up with intelligent automations.",me:"Our process",mt:"Simple, fast and tailored to your business.",de:"Demo",dt:"See how AUREX AI can process a customer request.",dl:"This simulation shows the type of workflow that can be automated.",db:"RUN THE DEMO →",se:"Ongoing support",su:"AUREX AI monthly support",sd:"Maintenance, optimization and support to keep your system performing.",pm:"/ month",sub:"SUBSCRIBE — €497/MONTH",ce:"Tell us about your project",ct:"Build an AI system that is useful to your business.",cd:"Describe your needs. We will contact you to define the right solution.",cq:"REQUEST A QUOTE →",fi:"France • Europe • Worldwide"};
-const FR={title:"AUTOMATISEZ.<br>GAGNEZ DU TEMPS.<br>DÉVELOPPEZ VOTRE ENTREPRISE.",intro:"AUREX AI conçoit des systèmes d'intelligence artificielle pour automatiser vos opérations, répondre plus vite à vos clients et accélérer votre croissance.",discover:"DÉCOUVRIR NOS SOLUTIONS →",quote:"DEMANDER UN DEVIS",intl:"France • Europe • International — accompagnement à distance",st:"Des systèmes IA pensés pour produire un résultat concret.",sl:"Chaque solution est adaptée à votre activité, vos outils et vos objectifs.",a1:"Automatisation IA",p1:"À partir de 497 €",d1:"Automatisez les tâches répétitives et les flux qui ralentissent votre équipe.",a2:"Agent IA personnalisé",p2:"À partir de 997 €",d2:"Un assistant IA adapté à votre entreprise pour vos équipes ou vos clients.",a3:"Acquisition clients par IA",p3:"À partir de 697 €",d3:"Structurez votre prospection et vos relances avec des automatisations intelligentes.",me:"Notre méthode",mt:"Simple, rapide et adapté à votre entreprise.",de:"Démonstration",dt:"Voyez comment AUREX AI traite une demande client.",dl:"Cette simulation montre le type de parcours qui peut être automatisé dans votre entreprise.",db:"LANCER LA DÉMONSTRATION →",se:"Suivi continu",su:"Accompagnement mensuel AUREX AI",sd:"Maintenance, optimisation et assistance pour garder votre système performant.",pm:"/ mois",sub:"S'ABONNER — 497 €/MOIS",ce:"Parlons de votre projet",ct:"Construisons un système IA utile à votre entreprise.",cd:"Décrivez votre besoin. Nous vous recontactons pour définir la solution adaptée.",cq:"DEMANDER UN DEVIS →",fi:"France • Europe • International"};
-function apply(){let d=L==="fr"?FR:EN;for(let k in d){let e=document.getElementById(k);if(e)e.innerHTML=d[k]}lang.textContent=L==="fr"?"EN":"FR";processNav.textContent=L==="fr"?"Méthode":"Process";document.querySelectorAll(".choose").forEach(x=>x.textContent=L==="fr"?"CHOISIR CETTE SOLUTION":"CHOOSE THIS SOLUTION");ci.placeholder=L==="fr"?"Votre question…":"Your question…"}apply();lang.onclick=()=>{L=L==="fr"?"en":"fr";localStorage.setItem("aurex-lang",L);apply();msgs.innerHTML="";welcome()};
-demo.onsubmit=e=>{e.preventDefault();result.style.display="block";result.textContent=L==="fr"?`✓ Démonstration AUREX AI
+const EN={title:"AUTOMATE.<br>SAVE TIME.<br>GROW YOUR BUSINESS.",intro:"AUREX AI builds AI systems that automate operations, help you respond faster to customers and support business growth.",discover:"EXPLORE OUR SOLUTIONS →",quote:"REQUEST A QUOTE",intl:"France • Europe • Worldwide — remote delivery available",st:"AI systems designed around concrete business outcomes.",sl:"Every solution is adapted to your workflow, tools and objectives.",a1:"AI Automation",p1:"From €497",d1:"Automate repetitive tasks and operational workflows.",a2:"Custom AI Agent",p2:"From €997",d2:"A tailored AI assistant for your customers or internal team.",a3:"AI Client Acquisition",p3:"From €697",d3:"Structure outreach and follow-up with intelligent automations.",me:"Our process",mt:"Simple, fast and tailored to your business.",de:"Demo",dt:"See how AUREX AI can process a customer request.",dl:"This simulation shows the type of workflow that can be automated.",db:"RUN THE DEMO →",se:"Ongoing support",su:"AUREX AI monthly support",sd:"Maintenance, optimization and support to keep your system performing.",pm:"/ month",sub:"SUBSCRIBE — €497/MONTH",ce:"Tell us about your project",ct:"Build an AI system that is useful to your business.",cd:"Describe your needs. We will contact you to define the right solution.",cq:"REQUEST A QUOTE →",fi:"France • Europe • Worldwide",f11:"Request handling",f12:"Follow-ups and reminders",f13:"Tool connections",choose1:"CHOOSE THIS SOLUTION",f21:"24/7 customer support",f22:"Request qualification",f23:"Personalized responses",pay997:"PAY €997",f31:"Lead qualification",f32:"Follow-up sequences",f33:"Opportunity tracking",pay697:"PAY €697",s1t:"Audit",s1p:"We identify tasks to automate and potential efficiency gains.",s2t:"Design",s2p:"We build the system around your workflow.",s3t:"Implementation",s3p:"We connect, test and deploy the solution.",s4t:"Optimization",s4p:"We monitor performance and improve the system.",m1:"Ongoing maintenance and monitoring",m2:"Regular optimizations",m3:"Support when issues arise",m4:"System improvements",stripeNotice:"Secure payment via Stripe.",legal1:"Legal notice",legal2:"Privacy",legal3:"Terms",q1:"Offers",q2:"Pricing",q3:"International",q4:"Quote"};
+const FR={title:"AUTOMATISEZ.<br>GAGNEZ DU TEMPS.<br>DÉVELOPPEZ VOTRE ENTREPRISE.",intro:"AUREX AI conçoit des systèmes d'intelligence artificielle pour automatiser vos opérations, répondre plus vite à vos clients et accélérer votre croissance.",discover:"DÉCOUVRIR NOS SOLUTIONS →",quote:"DEMANDER UN DEVIS",intl:"France • Europe • International — accompagnement à distance",st:"Des systèmes IA pensés pour produire un résultat concret.",sl:"Chaque solution est adaptée à votre activité, vos outils et vos objectifs.",a1:"Automatisation IA",p1:"À partir de 497 €",d1:"Automatisez les tâches répétitives et les flux qui ralentissent votre équipe.",a2:"Agent IA personnalisé",p2:"À partir de 997 €",d2:"Un assistant IA adapté à votre entreprise pour vos équipes ou vos clients.",a3:"Acquisition clients par IA",p3:"À partir de 697 €",d3:"Structurez votre prospection et vos relances avec des automatisations intelligentes.",me:"Notre méthode",mt:"Simple, rapide et adapté à votre entreprise.",de:"Démonstration",dt:"Voyez comment AUREX AI traite une demande client.",dl:"Cette simulation montre le type de parcours qui peut être automatisé dans votre entreprise.",db:"LANCER LA DÉMONSTRATION →",se:"Suivi continu",su:"Accompagnement mensuel AUREX AI",sd:"Maintenance, optimisation et assistance pour garder votre système performant.",pm:"/ mois",sub:"S'ABONNER — 497 €/MOIS",ce:"Parlons de votre projet",ct:"Construisons un système IA utile à votre entreprise.",cd:"Décrivez votre besoin. Nous vous recontactons pour définir la solution adaptée.",cq:"DEMANDER UN DEVIS →",fi:"France • Europe • International",f11:"Traitement de demandes",f12:"Suivis et relances",f13:"Connexion de vos outils",choose1:"CHOISIR CETTE SOLUTION",f21:"Support client 24h/24",f22:"Qualification des demandes",f23:"Réponses personnalisées",pay997:"PAYER 997 €",f31:"Qualification de prospects",f32:"Séquences de relance",f33:"Suivi des opportunités",pay697:"PAYER 697 €",s1t:"Audit",s1p:"Nous identifions les tâches à automatiser et les gains possibles.",s2t:"Conception",s2p:"Nous construisons le système adapté à votre fonctionnement.",s3t:"Mise en place",s3p:"Nous connectons, testons et déployons la solution.",s4t:"Optimisation",s4p:"Nous suivons les performances et améliorons le système.",m1:"Maintenance et suivi continu",m2:"Optimisations régulières",m3:"Assistance en cas de problème",m4:"Améliorations du système",stripeNotice:"Paiement sécurisé via Stripe.",legal1:"Mentions légales",legal2:"Confidentialité",legal3:"Conditions",q1:"Offres",q2:"Tarifs",q3:"International",q4:"Devis"};
 
-Bonjour ${name.value},
+const $=id=>document.getElementById(id);
+const langBtn=$("lang"),processNav=$("processNav"),demo=$("demo"),result=$("result"),nameInput=$("name"),needInput=$("need"),openBtn=$("open"),closeBtn=$("closeChat"),chatBox=$("chat"),msgsBox=$("msgs"),chatForm=$("cf"),chatInput=$("ci");
+let history=[];
+
+function apply(){
+  const d=L==="fr"?FR:EN;
+  for(const k in d){const el=$(k);if(el)el.innerHTML=d[k]}
+  langBtn.textContent=L==="fr"?"EN":"FR";
+  processNav.textContent=L==="fr"?"Méthode":"Process";
+  chatInput.placeholder=L==="fr"?"Votre question…":"Your question…";
+  $("q1").dataset.q=L==="fr"?"Présente-moi vos offres":"Tell me about your offers";
+  $("q2").dataset.q=L==="fr"?"Quels sont vos tarifs ?":"What are your prices?";
+  $("q3").dataset.q=L==="fr"?"Travaillez-vous à l'international ?":"Do you work internationally?";
+  $("q4").dataset.q=L==="fr"?"Comment demander un devis ?":"How can I request a quote?";
+}
+function msg(t,u=false,extra=""){const d=document.createElement("div");d.className="msg"+(u?" user":"")+(extra?" "+extra:"");d.textContent=t;msgsBox.appendChild(d);msgsBox.scrollTop=msgsBox.scrollHeight;return d}
+function welcome(){if(!msgsBox.children.length)msg(L==="fr"?"Bonjour 👋 Je suis l'assistant IA AUREX AI. Posez-moi vos questions sur nos solutions, tarifs ou votre projet.":"Hello 👋 I'm the AUREX AI assistant. Ask me about our solutions, pricing or your project.")}
+function fallback(q){
+  const x=q.toLowerCase();
+  if(/prix|tarif|price|cost/.test(x)) return L==="fr"?"Nos offres démarrent à 497 €, 697 € et 997 € selon la solution. Le suivi mensuel est à 497 €/mois.":"Our offers start at €497, €697 and €997 depending on the solution. Monthly support is €497/month.";
+  if(/international|world|europe|étranger|etranger/.test(x)) return L==="fr"?"Oui. AUREX AI peut accompagner des entreprises en France, en Europe et à l'international, à distance.":"Yes. AUREX AI can work remotely with companies in France, Europe and worldwide.";
+  if(/offre|service|solution|agent|automation|automatisation/.test(x)) return L==="fr"?"Nous proposons : Automatisation IA dès 497 €, Agent IA personnalisé dès 997 €, Acquisition clients par IA dès 697 €.":"We offer: AI Automation from €497, Custom AI Agent from €997, and AI Client Acquisition from €697.";
+  return L==="fr"?"Je peux vous aider à choisir une solution. Pour un besoin précis, utilisez « Demander un devis » et expliquez votre projet.":"I can help you choose a solution. For a specific need, use “Request a quote” and describe your project.";
+}
+async function askAI(q){
+  history.push({role:"user",content:q});
+  history=history.slice(-8);
+  const typing=msg(L==="fr"?"L'assistant réfléchit…":"Assistant is thinking…",false,"typing");
+  try{
+    const r=await fetch("/.netlify/functions/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:q,language:L,history})});
+    const data=await r.json();
+    typing.remove();
+    const answer=(r.ok&&data.answer)?data.answer:fallback(q);
+    msg(answer);
+    history.push({role:"assistant",content:answer});
+    history=history.slice(-8);
+  }catch(e){
+    typing.remove();
+    const answer=fallback(q);
+    msg(answer);
+    history.push({role:"assistant",content:answer});
+  }
+}
+apply();welcome();
+
+langBtn.addEventListener("click",()=>{L=L==="fr"?"en":"fr";localStorage.setItem("aurex-lang",L);apply();msgsBox.innerHTML="";history=[];welcome()});
+demo.addEventListener("submit",e=>{e.preventDefault();result.style.display="block";result.textContent=L==="fr"?`✓ Démonstration AUREX AI
+
+Bonjour ${nameInput.value},
 
 Votre demande a été analysée :
-${need.value}
+${needInput.value}
 
 ✓ Besoin identifié automatiquement
 ✓ Réponse préparée instantanément
 ✓ Demande classée et transmise
 ✓ Suivi automatisé possible 24h/24`:`✓ AUREX AI Demo
 
-Hello ${name.value},
+Hello ${nameInput.value},
 
 Your request has been analyzed:
-${need.value}
+${needInput.value}
 
 ✓ Need identified automatically
 ✓ Response prepared instantly
 ✓ Request classified and routed
-✓ 24/7 automated follow-up available`};
-function msg(t,u=false){let d=document.createElement("div");d.className="msg"+(u?" user":"");d.textContent=t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}function welcome(){if(!msgs.children.length)msg(L==="fr"?"Bonjour 👋 Je suis l'assistant AUREX AI. Je peux vous présenter nos solutions, tarifs et vous guider vers un devis.":"Hello 👋 I'm the AUREX AI assistant. I can explain our solutions, pricing and help you request a quote.")}
-function ans(i){let f={services:"3 solutions :
-• Automatisation IA — dès 497 €
-• Agent IA — dès 997 €
-• Acquisition IA — dès 697 €",price:"Les projets démarrent à 497 €. Le prix final dépend du besoin. Le suivi mensuel est à 497 €/mois.",world:"Oui. Nous pouvons accompagner des entreprises en France, en Europe et à l'international, à distance.",quote:"Cliquez sur « Demander un devis » pour nous expliquer votre besoin."},e={services:"3 solutions:
-• AI Automation — from €497
-• Custom AI Agent — from €997
-• AI Client Acquisition — from €697",price:"Projects start at €497. Final pricing depends on your requirements. Monthly support is €497/month.",world:"Yes. We can work with companies in France, Europe and worldwide remotely.",quote:"Click “Request a quote” and tell us about your requirements."};msg((L==="fr"?f:e)[i])}
-open.onclick=()=>{chat.classList.toggle("open");welcome()};document.querySelectorAll(".quick button").forEach(b=>b.onclick=()=>ans(b.dataset.i));cf.onsubmit=e=>{e.preventDefault();let q=ci.value.trim();if(!q)return;msg(q,true);ci.value="";let x=q.toLowerCase(),i=/prix|tarif|price|cost/.test(x)?"price":/international|world|europe|étranger/.test(x)?"world":/offre|service|solution|agent|automation|automatisation/.test(x)?"services":"quote";setTimeout(()=>ans(i),200)};welcome();
-</script></body></html>
-    
-
+✓ 24/7 automated follow-up available`});
+openBtn.addEventListener("click",()=>{chatBox.classList.toggle("open");openBtn.setAttribute("aria-expanded",chatBox.classList.contains("open")?"true":"false");welcome()});
+closeBtn.addEventListener("click",()=>{chatBox.classList.remove("open");openBtn.setAttribute("aria-expanded","false")});
+document.querySelectorAll(".quick button").forEach(b=>b.addEventListener("click",()=>askAI(b.dataset.q)));
+chatForm.addEventListener("submit",e=>{e.preventDefault();const q=chatInput.value.trim();if(!q)return;msg(q,true);chatInput.value="";askAI(q)});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){chatBox.classList.remove("open");openBtn.setAttribute("aria-expanded","false")}});
+</script>
+</body>
+</html>
