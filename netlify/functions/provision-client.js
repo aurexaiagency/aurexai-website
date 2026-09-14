@@ -206,7 +206,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 303,
       headers: {
-        Location: "/merci.html?activation=ok"
+        Location: `/chatbot.html?session_id=${encodeURIComponent(sessionId)}`
       },
       body: ""
     };
