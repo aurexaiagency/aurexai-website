@@ -1,7 +1,13 @@
 exports.handler = async function (event) {
+  const headers = {
+    "Content-Type": "application/json",
+    "Cache-Control": "no-store"
+  };
+
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ error: "Method not allowed" })
     };
   }
@@ -14,14 +20,20 @@ exports.handler = async function (event) {
     if (!message) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ error: "Message manquant" })
       };
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    const apiKey = process.env.OPENAI_API_KEY;
+
+    if (!apiKey) {
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: "Assistant non configuré" })
+        headers,
+        body: JSON.stringify({
+          answer: "Diagnostic AUREX : OPENAI_API_KEY absente dans la fonction."
+        })
       };
     }
 
@@ -35,12 +47,11 @@ AUREX AI propose :
 - Acquisition clients par IA : à partir de 697 €
 - Accompagnement mensuel, maintenance et optimisation : 497 €/mois.
 
-Ton rôle est d'aider les visiteurs à comprendre les services AUREX AI et à choisir la solution adaptée.
-
-Réponds en français de manière professionnelle, claire, concise et commerciale.
+Aide les visiteurs à comprendre les services AUREX AI et à choisir la solution adaptée.
+Réponds en français de manière professionnelle, claire et concise.
 Ne garantis jamais de résultats.
-N'invente jamais de prix, de fonctionnalités ou de services.
-Si le besoin nécessite une étude personnalisée, invite le prospect à demander un devis.`
+N'invente jamais de prix, fonctionnalités ou services.
+Si une étude personnalisée est nécessaire, invite le prospect à demander un devis.`
         : `You are the official sales assistant for AUREX AI.
 
 AUREX AI offers:
@@ -50,7 +61,6 @@ AUREX AI offers:
 - Monthly maintenance, optimization and support: €497/month.
 
 Help visitors understand AUREX AI services and identify the appropriate solution.
-
 Answer in English in a professional, clear and concise way.
 Never guarantee results.
 Never invent prices, features or services.
@@ -60,7 +70,7 @@ For custom requirements, invite the prospect to request a quote.`;
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+        Authorization: `Bearer ${apiKey}`
       },
       body: JSON.stringify({
         model: "gpt-5.6-luna",
@@ -70,37 +80,64 @@ For custom requirements, invite the prospect to request a quote.`;
       })
     });
 
-    const data = await response.json();
+    const raw = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      data = {};
+    }
 
     if (!response.ok) {
-      console.error("OpenAI API error:", data);
+      const code = data?.error?.code || data?.error?.type || "unknown";
+      const safeMessage =
+        data?.error?.message || "Erreur inconnue renvoyée par OpenAI.";
+
       return {
-        statusCode: 502,
+        statusCode: 200,
+        headers,
         body: JSON.stringify({
-          error: "Assistant temporairement indisponible"
+          answer:
+            `Diagnostic OpenAI : HTTP ${response.status} — ${code} — ${safeMessage}`
         })
       };
     }
 
-    const answer =
-      data.output_text ||
-      "Je n'ai pas pu générer de réponse. Vous pouvez demander un devis pour être recontacté.";
+    let answer = data.output_text;
+
+    if (!answer && Array.isArray(data.output)) {
+      answer = data.output
+        .flatMap(item => Array.isArray(item.content) ? item.content : [])
+        .filter(item => item.type === "output_text")
+        .map(item => item.text)
+        .filter(Boolean)
+        .join("\n");
+    }
+
+    if (!answer) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          answer: "Diagnostic OpenAI : réponse reçue, mais aucun texte n'a été généré."
+        })
+      };
+    }
 
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers,
       body: JSON.stringify({ answer })
     };
-
   } catch (error) {
-    console.error("AUREX AI assistant error:", error);
-
     return {
-      statusCode: 500,
+      statusCode: 200,
+      headers,
       body: JSON.stringify({
-        error: "Erreur de l'assistant"
+        answer:
+          "Diagnostic AUREX : " +
+          (error?.message || "erreur interne inconnue")
       })
     };
   }
