@@ -8,7 +8,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const stripeSecret = Netlify.env.get("STRIPE_SECRET_KEY");
+    
     const openaiKey = Netlify.env.get("OPENAI_API_KEY");
 
     if (!stripeSecret || !openaiKey) {
@@ -35,7 +35,17 @@ exports.handler = async (event) => {
         body: JSON.stringify({ error: "Session client invalide" })
       };
     }
+const stripeSecret = sessionId.startsWith("cs_test_")
+  ? Netlify.env.get("STRIPE_TEST_SECRET_KEY")
+  : Netlify.env.get("STRIPE_SECRET_KEY");
 
+if (!stripeSecret) {
+  return {
+    statusCode: 500,
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+    body: JSON.stringify({ error: "Configuration Stripe manquante" })
+  };
+}
     if (!message) {
       return {
         statusCode: 400,
