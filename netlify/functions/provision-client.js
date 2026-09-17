@@ -38,26 +38,33 @@ exports.handler = async function (event) {
   }
 
   try {
-    const stripeSecret =
-  process.env.STRIPE_TEST_SECRET_KEY ||
-  process.env.STRIPE_SECRET_KEY;
-
-    if (!stripeSecret) {
-      console.error("STRIPE_SECRET_KEY missing");
-      return {
-        statusCode: 500,
-        body: "Configuration Stripe manquante."
-      };
-    }
-
     const body = parseBody(event);
 
-    const sessionId = getField(
-      body,
-      "Stripe_Session_ID",
-      "stripe_session_id",
-      "session_id"
-    );
+const sessionId = getField(
+  body,
+  "Stripe_Session_ID",
+  "stripe_session_id",
+  "session_id"
+);
+
+if (!sessionId || !sessionId.startsWith("cs_")) {
+  return {
+    statusCode: 400,
+    body: "Session Stripe invalide."
+  };
+}
+
+const stripeSecret = sessionId.startsWith("cs_test_")
+  ? process.env.STRIPE_TEST_SECRET_KEY
+  : process.env.STRIPE_SECRET_KEY;
+
+if (!stripeSecret) {
+  console.error("Stripe secret key missing");
+  return {
+    statusCode: 500,
+    body: "Configuration Stripe manquante."
+  };
+}
 
     const nom = limit(getField(body, "Nom", "nom"), 120);
     const email = limit(getField(body, "Email", "email"), 200);
