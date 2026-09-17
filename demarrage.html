@@ -3,8 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Démarrage de votre projet - AUREX AI</title>
-  <meta name="description" content="Démarrez votre projet AUREX AI après votre commande.">
+
+  <meta
+    name="description"
+    content="Démarrez votre projet AUREX AI après votre commande."
+  >
 
   <style>
     :root{
@@ -14,9 +19,12 @@
       --muted:#a7b0ad;
       --line:#202624;
       --accent:#5cffb0;
+      --error:#ff7777;
     }
 
-    *{box-sizing:border-box}
+    *{
+      box-sizing:border-box;
+    }
 
     body{
       margin:0;
@@ -73,7 +81,9 @@
       margin:18px 0 8px;
     }
 
-    input,select,textarea{
+    input,
+    select,
+    textarea{
       width:100%;
       padding:14px 15px;
       border:1px solid #2a3230;
@@ -101,10 +111,25 @@
       cursor:pointer;
     }
 
+    button:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+    }
+
     .note{
       margin-top:16px;
       color:var(--muted);
       font-size:13px;
+    }
+
+    .error{
+      display:none;
+      margin:0 0 18px;
+      padding:13px;
+      border:1px solid #6b2929;
+      background:#281111;
+      color:var(--error);
+      border-radius:10px;
     }
 
     .back{
@@ -125,69 +150,152 @@
 
   <main class="wrap">
 
-    <div class="brand">↗ AUREX AI</div>
+    <div class="brand">
+      ↗ AUREX AI
+    </div>
 
-    <div class="badge">✓ ÉTAPE DE DÉMARRAGE</div>
+    <div class="badge">
+      ✓ ÉTAPE DE DÉMARRAGE
+    </div>
 
-    <h1>Votre projet commence ici.</h1>
+    <h1>
+      Votre projet commence ici.
+    </h1>
 
     <p class="intro">
-      Merci pour votre confiance. Remplissez ce formulaire avec les informations utiles
-      pour que nous puissions préparer votre solution AUREX AI.
+      Merci pour votre confiance.
+      Remplissez ce formulaire avec les informations utiles
+      pour préparer votre solution AUREX AI.
     </p>
 
     <section class="card">
 
+      <div id="activationError" class="error">
+        Cette page doit être ouverte depuis la confirmation
+        de paiement AUREX AI.
+      </div>
+
       <form
+        id="onboardingForm"
         name="demarrage-client"
         method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
         action="/.netlify/functions/provision-client"
       >
-<input type="hidden" id="stripe_session_id" name="Stripe_session_id" value="">
-        <input type="hidden" name="form-name" value="demarrage-client">
 
-        <p class="hidden">
-          <label>
-            Ne pas remplir :
-            <input name="bot-field">
-          </label>
-        </p>
+        <input
+          type="hidden"
+          id="stripe_session_id"
+          name="Stripe_session_id"
+          value=""
+        >
 
-        <label for="nom">Votre nom *</label>
-        <input id="nom" name="Nom" type="text" required>
+        <label for="nom">
+          Votre nom *
+        </label>
 
-        <label for="email">Votre e-mail *</label>
-        <input id="email" name="Email" type="email" required>
+        <input
+          id="nom"
+          name="Nom"
+          type="text"
+          required
+        >
 
-        <label for="entreprise">Entreprise / marque *</label>
-        <input id="entreprise" name="Entreprise" type="text" required>
+        <label for="email">
+          Votre e-mail *
+        </label>
 
-        <label for="site">Site web ou réseau social</label>
-        <input id="site" name="Site" type="url" placeholder="https://">
+        <input
+          id="email"
+          name="Email"
+          type="email"
+          required
+        >
 
-        <label for="offre">Offre achetée *</label>
+        <label for="entreprise">
+          Entreprise / marque *
+        </label>
 
-        <select id="offre" name="Offre" required>
-          <option value="">Choisir une offre</option>
-          <option>Acquisition clients par IA — 697 €</option>
-          <option>Agent IA personnalisé — 997 €</option>
-          <option>Accompagnement mensuel — 497 €/mois</option>
-          <option>Autre / offre personnalisée</option>
+        <input
+          id="entreprise"
+          name="Entreprise"
+          type="text"
+          required
+        >
+
+        <label for="site">
+          Site web ou réseau social
+        </label>
+
+        <input
+          id="site"
+          name="Site"
+          type="url"
+          placeholder="https://"
+        >
+
+        <label for="offre">
+          Offre achetée *
+        </label>
+
+        <select
+          id="offre"
+          name="Offre"
+          required
+        >
+          <option value="">
+            Choisir une offre
+          </option>
+
+          <option>
+            Acquisition clients par IA — 697 €
+          </option>
+
+          <option>
+            Agent IA personnalisé — 997 €
+          </option>
+
+          <option>
+            Accompagnement mensuel — 497 €/mois
+          </option>
+
+          <option>
+            Autre / offre personnalisée
+          </option>
         </select>
 
-        <label for="langue">Langue principale *</label>
+        <label for="langue">
+          Langue principale *
+        </label>
 
-        <select id="langue" name="Langue" required>
-          <option value="">Choisir</option>
-          <option>Français</option>
-          <option>Anglais</option>
-          <option>Français + Anglais</option>
-          <option>Autre</option>
+        <select
+          id="langue"
+          name="Langue"
+          required
+        >
+          <option value="">
+            Choisir
+          </option>
+
+          <option>
+            Français
+          </option>
+
+          <option>
+            Anglais
+          </option>
+
+          <option>
+            Français + Anglais
+          </option>
+
+          <option>
+            Autre
+          </option>
         </select>
 
-        <label for="objectif">Objectif principal *</label>
+        <label for="objectif">
+          Objectif principal *
+        </label>
 
         <textarea
           id="objectif"
@@ -227,13 +335,17 @@
           placeholder="Horaires, zones desservies, ton souhaité, restrictions, liens utiles..."
         ></textarea>
 
-        <button type="submit">
-          Envoyer mes informations →
+        <button
+          id="submitButton"
+          type="submit"
+        >
+          Activer mon chatbot →
         </button>
 
         <p class="note">
-          N'envoyez jamais de mot de passe, clé API, numéro complet de carte bancaire
-          ou autre donnée bancaire sensible dans ce formulaire.
+          N'envoyez jamais de mot de passe,
+          clé API, numéro complet de carte bancaire
+          ou autre donnée bancaire sensible.
         </p>
 
       </form>
@@ -245,14 +357,84 @@
     </a>
 
   </main>
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get("session_id");
-  const stripeField = document.getElementById("stripe_session_id");
 
-  if (sessionId && stripeField) {
-    stripeField.value = sessionId;
-  }
-</script>
+  <script>
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const sessionId =
+      String(
+        params.get("session_id") || ""
+      ).trim();
+
+    const stripeField =
+      document.getElementById(
+        "stripe_session_id"
+      );
+
+    const form =
+      document.getElementById(
+        "onboardingForm"
+      );
+
+    const submitButton =
+      document.getElementById(
+        "submitButton"
+      );
+
+    const activationError =
+      document.getElementById(
+        "activationError"
+      );
+
+    /*
+      Le formulaire ne peut être envoyé
+      que si Stripe nous a transmis
+      une vraie Checkout Session.
+    */
+    const validSession =
+      sessionId.startsWith("cs_");
+
+    if (validSession) {
+      stripeField.value = sessionId;
+
+      activationError.style.display =
+        "none";
+    } else {
+      activationError.style.display =
+        "block";
+
+      submitButton.disabled = true;
+    }
+
+    /*
+      Deuxième sécurité juste avant
+      l'envoi du formulaire.
+    */
+    form.addEventListener(
+      "submit",
+      function(event) {
+        stripeField.value = sessionId;
+
+        if (
+          !stripeField.value ||
+          !stripeField.value.startsWith("cs_")
+        ) {
+          event.preventDefault();
+
+          activationError.style.display =
+            "block";
+
+          activationError.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }
+      }
+    );
+  </script>
+
 </body>
 </html>
