@@ -1,6 +1,9 @@
 function getField(body, ...names) {
   for (const name of names) {
-    if (body[name] !== undefined && body[name] !== null) {
+    if (
+      body[name] !== undefined &&
+      body[name] !== null
+    ) {
       return String(body[name]).trim();
     }
   }
@@ -9,6 +12,7 @@ function getField(body, ...names) {
 
 function parseBody(event) {
   const raw = event.body || "";
+
   const contentType =
     event.headers?.["content-type"] ||
     event.headers?.["Content-Type"] ||
@@ -22,11 +26,15 @@ function parseBody(event) {
     }
   }
 
-  return Object.fromEntries(new URLSearchParams(raw));
+  return Object.fromEntries(
+    new URLSearchParams(raw)
+  );
 }
 
-function limit(value, max = 450) {
-  return String(value || "").trim().slice(0, max);
+function limit(value, max = 500) {
+  return String(value || "")
+    .trim()
+    .slice(0, max);
 }
 
 exports.handler = async function (event) {
@@ -40,38 +48,76 @@ exports.handler = async function (event) {
   try {
     const body = parseBody(event);
 
-const sessionId = getField(
-  body,
-  "Stripe_Session_ID",
-  "stripe_session_id",
-  "session_id"
-);
+    /*
+      IMPORTANT :
+      on accepte toutes les variantes utilisées
+      par notre formulaire Aurex AI.
+    */
+    const sessionId = getField(
+      body,
+      "Stripe_session_id",
+      "Stripe_Session_ID",
+      "stripe_session_id",
+      "session_id"
+    );
 
-if (!sessionId || !sessionId.startsWith("cs_")) {
-  return {
-    statusCode: 400,
-    body: "Session Stripe invalide."
-  };
-}
+    if (
+      !sessionId ||
+      !sessionId.startsWith("cs_")
+    ) {
+      console.error(
+        "Missing or invalid Stripe session ID"
+      );
 
-const stripeSecret = sessionId.startsWith("cs_test_")
-  ? process.env.STRIPE_TEST_SECRET_KEY
-  : process.env.STRIPE_SECRET_KEY;
+      return {
+        statusCode: 400,
+        body: "Session Stripe invalide."
+      };
+    }
 
-if (!stripeSecret) {
-  console.error("Stripe secret key missing");
-  return {
-    statusCode: 500,
-    body: "Configuration Stripe manquante."
-  };
-}
+    /*
+      TEST Stripe = STRIPE_TEST_SECRET_KEY
+      LIVE Stripe = STRIPE_SECRET_KEY
+    */
+    const stripeSecret =
+      sessionId.startsWith("cs_test_")
+        ? process.env.STRIPE_TEST_SECRET_KEY
+        : process.env.STRIPE_SECRET_KEY;
 
-    const nom = limit(getField(body, "Nom", "nom"), 120);
-    const email = limit(getField(body, "Email", "email"), 200);
-    const entreprise = limit(
-      getField(body, "Entreprise", "entreprise"),
+    if (!stripeSecret) {
+      console.error(
+        "Stripe secret key missing for session type"
+      );
+
+      return {
+        statusCode: 500,
+        body:
+          "Configuration Stripe manquante."
+      };
+    }
+
+    /*
+      Informations envoyées par le client.
+    */
+    const nom = limit(
+      getField(body, "Nom", "nom"),
+      120
+    );
+
+    const email = limit(
+      getField(body, "Email", "email"),
       200
     );
+
+    const entreprise = limit(
+      getField(
+        body,
+        "Entreprise",
+        "entreprise"
+      ),
+      200
+    );
+
     const site = limit(
       getField(
         body,
@@ -82,10 +128,54 @@ if (!stripeSecret) {
       ),
       300
     );
+
     const offre = limit(
-      getField(body, "Offre", "offre", "Offre_achetee"),
+      getField(
+        body,
+        "Offre",
+        "offre",
+        "Offre_achetee"
+      ),
       200
     );
+
+    const langue = limit(
+      getField(
+        body,
+        "Langue",
+        "langue"
+      ),
+      80
+    );
+
+    const objectif = limit(
+      getField(
+        body,
+        "Objectif",
+        "objectif"
+      ),
+      1000
+    );
+
+    const activite = limit(
+      getField(
+        body,
+        "Activite",
+        "activite"
+      ),
+      1000
+    );
+
+    const faq = limit(
+      getField(
+        body,
+        "Questions_frequentes",
+        "questions_frequentes",
+        "faq"
+      ),
+      1500
+    );
+
     const informations = limit(
       getField(
         body,
@@ -93,48 +183,49 @@ if (!stripeSecret) {
         "informations",
         "Projet"
       ),
-      450
+      1500
     );
 
-    if (!sessionId || !sessionId.startsWith("cs_")) {
+    if (!nom || !email || !entreprise) {
       return {
         statusCode: 400,
-        body: "Session Stripe invalide."
+        body:
+          "Nom, email et entreprise obligatoires."
       };
     }
 
-    if (!nom || !email) {
-      return {
-        statusCode: 400,
-        body: "Nom et email obligatoires."
-      };
-    }
-
-    // Vérification directe de la Checkout Session auprès de Stripe
-    const sessionResponse = await fetch(
+    /*
+      Vérification de la session directement
+      auprès de Stripe.
+    */
+    const stripeResponse = await fetch(
       `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(
         sessionId
       )}?expand[]=subscription`,
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${stripeSecret}`
+          Authorization:
+            `Bearer ${stripeSecret}`
         }
       }
     );
 
-    const session = await sessionResponse.json();
+    const session =
+      await stripeResponse.json();
 
-    if (!sessionResponse.ok) {
+    if (!stripeResponse.ok) {
       console.error(
-        "Stripe session verification failed:",
+        "Stripe session verification failed",
+        stripeResponse.status,
         session?.error?.type,
         session?.error?.code
       );
 
       return {
         statusCode: 502,
-        body: "Impossible de vérifier ce paiement."
+        body:
+          "Impossible de vérifier ce paiement."
       };
     }
 
@@ -144,42 +235,107 @@ if (!stripeSecret) {
         ? session.subscription
         : null;
 
-    const checkoutComplete = session.status === "complete";
-
     const subscriptionActive =
       subscription &&
-      ["active", "trialing"].includes(subscription.status);
+      ["active", "trialing"].includes(
+        subscription.status
+      );
 
+    /*
+      Le chatbot est réservé à l'abonnement
+      mensuel Aurex AI.
+    */
     const validSubscription =
       session.mode === "subscription" &&
-      checkoutComplete &&
+      session.status === "complete" &&
       subscriptionActive;
 
     if (!validSubscription) {
-      console.error("Subscription verification failed", {
-        mode: session.mode,
-        sessionStatus: session.status,
-        paymentStatus: session.payment_status,
-        subscriptionStatus: subscription?.status
-      });
+      console.error(
+        "Aurex subscription invalid",
+        {
+          mode: session.mode,
+          sessionStatus: session.status,
+          paymentStatus:
+            session.payment_status,
+          subscriptionStatus:
+            subscription?.status
+        }
+      );
 
       return {
         statusCode: 403,
-        body: "Abonnement non actif ou paiement non validé."
+        body:
+          "Abonnement non actif ou paiement non validé."
       };
     }
 
-    // Enregistrement des informations d'onboarding
-    // directement dans la Checkout Session Stripe.
-    const metadata = new URLSearchParams();
+    /*
+      Enregistre les informations du client
+      dans la Checkout Session Stripe.
 
-    metadata.set("metadata[nom]", nom);
-    metadata.set("metadata[email]", email);
-    metadata.set("metadata[entreprise]", entreprise);
-    metadata.set("metadata[site]", site);
-    metadata.set("metadata[offre]", offre || "AUREX AI 497 EUR/mois");
-    metadata.set("metadata[informations]", informations);
-    metadata.set("metadata[onboarding_complete]", "true");
+      client-chat.js les récupérera ensuite
+      pour personnaliser automatiquement
+      le chatbot.
+    */
+    const metadata =
+      new URLSearchParams();
+
+    metadata.set(
+      "metadata[nom]",
+      nom
+    );
+
+    metadata.set(
+      "metadata[email]",
+      email
+    );
+
+    metadata.set(
+      "metadata[entreprise]",
+      entreprise
+    );
+
+    metadata.set(
+      "metadata[site]",
+      site
+    );
+
+    metadata.set(
+      "metadata[offre]",
+      offre ||
+        "Accompagnement mensuel AUREX AI"
+    );
+
+    metadata.set(
+      "metadata[langue]",
+      langue
+    );
+
+    metadata.set(
+      "metadata[objectif]",
+      objectif
+    );
+
+    metadata.set(
+      "metadata[activite]",
+      activite
+    );
+
+    metadata.set(
+      "metadata[faq]",
+      faq
+    );
+
+    metadata.set(
+      "metadata[informations]",
+      informations
+    );
+
+    metadata.set(
+      "metadata[onboarding_complete]",
+      "true"
+    );
 
     const updateResponse = await fetch(
       `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(
@@ -188,36 +344,51 @@ if (!stripeSecret) {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${stripeSecret}`,
-          "Content-Type": "application/x-www-form-urlencoded"
+          Authorization:
+            `Bearer ${stripeSecret}`,
+          "Content-Type":
+            "application/x-www-form-urlencoded"
         },
         body: metadata.toString()
       }
     );
 
-    const updatedSession = await updateResponse.json();
+    const updatedSession =
+      await updateResponse.json();
 
     if (!updateResponse.ok) {
       console.error(
-        "Stripe metadata update failed:",
+        "Stripe metadata update failed",
+        updateResponse.status,
         updatedSession?.error?.type,
         updatedSession?.error?.code
       );
 
       return {
         statusCode: 502,
-        body: "Paiement vérifié, mais configuration client impossible."
+        body:
+          "Paiement vérifié, mais configuration du chatbot impossible."
       };
     }
 
-    console.log("AUREX client activated", {
-      session: sessionId.slice(0, 12) + "...",
-      subscriptionStatus: subscription.status,
-      onboarding: true
-    });
+    console.log(
+      "AUREX AI client activated",
+      {
+        session:
+          sessionId.slice(0, 12) + "...",
+        subscriptionStatus:
+          subscription.status,
+        entreprise,
+        onboarding: true
+      }
+    );
 
-    // Paiement + abonnement vérifiés :
-    // le client reçoit maintenant l'accès à son chatbot.
+    /*
+      Tout est validé.
+
+      Le client est envoyé directement
+      vers son chatbot personnalisé.
+    */
     return {
       statusCode: 303,
       headers: {
@@ -228,12 +399,17 @@ if (!stripeSecret) {
       },
       body: ""
     };
+
   } catch (error) {
-    console.error("Provision client error:", error);
+    console.error(
+      "AUREX provision client error",
+      error
+    );
 
     return {
       statusCode: 500,
-      body: "Une erreur est survenue pendant l'activation."
+      body:
+        "Une erreur est survenue pendant l'activation."
     };
   }
 };
