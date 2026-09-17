@@ -38,7 +38,9 @@ exports.handler = async function (event) {
   }
 
   try {
-    const stripeSecret = process.env.STRIPE_SECRET_KEY;
+    const stripeSecret =
+  process.env.STRIPE_TEST_SECRET_KEY ||
+  process.env.STRIPE_SECRET_KEY;
 
     if (!stripeSecret) {
       console.error("STRIPE_SECRET_KEY missing");
