@@ -39,10 +39,14 @@ exports.handler = async (event) => {
 
     // Choisit automatiquement la clé Stripe TEST ou LIVE.
     const stripeSecret = sessionId.startsWith("cs_test_")
-      ? Netlify.env.get("STRIPE_TEST_SECRET_KEY")
-      : Netlify.env.get("STRIPE_SECRET_KEY");
+  ? process.env.STRIPE_TEST_SECRET_KEY
+  : process.env.STRIPE_SECRET_KEY;
 
-    const openaiKey = Netlify.env.get("OPENAI_API_KEY");
+const openaiKey = process.env.OPENAI_API_KEY;
+      
+    
+
+    
 
     if (!stripeSecret) {
       console.error("Missing Stripe configuration");
