@@ -2,14 +2,11 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Assistant IA</title>
 
   <style>
-    *{
-      box-sizing:border-box;
-    }
+    *{box-sizing:border-box}
 
     body{
       margin:0;
@@ -17,356 +14,820 @@
       background:#050505;
       color:#fff;
       font-family:Arial,sans-serif;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
     }
 
-    .chat{
-      width:100%;
-      max-width:600px;
-      height:85vh;
-      max-height:760px;
-      background:#0b0b0b;
-      border:1px solid #222;
-      border-radius:22px;
-      overflow:hidden;
+    .app{
+      width:min(760px,100%);
+      min-height:100vh;
+      margin:auto;
       display:flex;
       flex-direction:column;
-      box-shadow:0 20px 60px rgba(0,0,0,.45);
+      background:#080808;
     }
 
-    .header{
-      padding:20px;
-      border-bottom:1px solid #222;
-      background:#0f0f0f;
+    header{
+      padding:18px;
+      border-bottom:1px solid #202020;
+      position:sticky;
+      top:0;
+      background:#080808;
+      z-index:5;
     }
 
     .brand{
-      font-size:12px;
-      color:#41e69c;
-      font-weight:bold;
-      letter-spacing:1px;
-      margin-bottom:7px;
-    }
-
-    .title{
-      font-size:20px;
-      font-weight:bold;
+      font-weight:800;
+      font-size:18px;
     }
 
     .status{
       margin-top:6px;
-      font-size:13px;
-      color:#999;
+      color:#8dffb1;
+      font-size:12px;
     }
 
     #messages{
       flex:1;
-      overflow-y:auto;
       padding:18px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
+      overflow-y:auto;
     }
 
-    .message{
-      max-width:85%;
+    .msg{
+      max-width:86%;
+      margin:10px 0;
       padding:12px 14px;
-      border-radius:15px;
+      border-radius:14px;
       line-height:1.45;
       white-space:pre-wrap;
-      font-size:15px;
+      word-break:break-word;
     }
 
     .assistant{
-      align-self:flex-start;
-      background:#171717;
-      border:1px solid #262626;
+      background:#151515;
+      border:1px solid #242424;
     }
 
     .user{
-      align-self:flex-end;
-      background:#fff;
-      color:#000;
+      margin-left:auto;
+      background:#0f5f34;
     }
 
-    .error{
-      align-self:center;
-      background:#2a1111;
-      border:1px solid #693030;
-      color:#ffb9b9;
-    }
-
-    .typing{
-      color:#888;
-      font-size:13px;
-      padding-left:3px;
-    }
-
-    .composer{
-      border-top:1px solid #222;
-      padding:14px;
+    .actions{
       display:flex;
-      gap:10px;
-      background:#0f0f0f;
+      gap:8px;
+      flex-wrap:wrap;
+      padding:0 18px 12px;
     }
 
-    textarea{
-      flex:1;
-      resize:none;
-      min-height:48px;
-      max-height:130px;
-      padding:13px;
-      border-radius:13px;
-      border:1px solid #333;
-      background:#151515;
+    .action{
+      border:1px solid #2c2c2c;
+      background:#111;
       color:#fff;
-      font-size:16px;
-      outline:none;
-      font-family:Arial,sans-serif;
-    }
-
-    textarea:focus{
-      border-color:#666;
-    }
-
-    button{
-      min-width:85px;
-      border:none;
-      border-radius:13px;
-      background:#fff;
-      color:#000;
-      font-weight:bold;
-      padding:0 18px;
+      padding:10px 12px;
+      border-radius:999px;
       cursor:pointer;
     }
 
-    button:disabled{
-      opacity:.45;
+    .composer{
+      display:flex;
+      gap:8px;
+      padding:14px;
+      border-top:1px solid #202020;
+      background:#080808;
+      position:sticky;
+      bottom:0;
+    }
+
+    #messageInput{
+      flex:1;
+      min-width:0;
+      background:#111;
+      color:#fff;
+      border:1px solid #292929;
+      border-radius:12px;
+      padding:13px;
+      font-size:16px;
+    }
+
+    button{
+      font:inherit;
+    }
+
+    #sendButton{
+      border:0;
+      background:#20d36b;
+      color:#04150a;
+      font-weight:800;
+      padding:0 18px;
+      border-radius:12px;
+      cursor:pointer;
+    }
+
+    button:disabled,
+    input:disabled{
+      opacity:.5;
       cursor:not-allowed;
     }
 
-    .footer{
-      text-align:center;
-      padding:0 12px 12px;
-      font-size:11px;
-      color:#666;
-      background:#0f0f0f;
+    .panel{
+      margin:0 18px 16px;
+      padding:16px;
+      border:1px solid #2b2b2b;
+      border-radius:16px;
+      background:#101010;
     }
 
-    @media(max-width:600px){
-      body{
-        padding:0;
-      }
+    .panel h3{
+      margin:0 0 6px;
+    }
 
-      .chat{
-        height:100vh;
-        max-height:none;
-        border-radius:0;
-        border:none;
-      }
+    .panel p{
+      margin:0 0 14px;
+      color:#aaa;
+      font-size:13px;
+      line-height:1.4;
+    }
 
-      button{
-        min-width:72px;
-        padding:0 13px;
-      }
+    .hidden{
+      display:none;
+    }
+
+    .field{
+      margin-bottom:11px;
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      margin-bottom:5px;
+      color:#ccc;
+    }
+
+    input,
+    textarea,
+    select{
+      width:100%;
+      background:#080808;
+      color:#fff;
+      border:1px solid #303030;
+      border-radius:10px;
+      padding:11px;
+      font:inherit;
+    }
+
+    textarea{
+      min-height:85px;
+      resize:vertical;
+    }
+
+    .consent{
+      display:flex;
+      gap:9px;
+      align-items:flex-start;
+      font-size:12px;
+      color:#bbb;
+      margin:12px 0;
+    }
+
+    .consent input{
+      width:auto;
+      margin-top:2px;
+    }
+
+    .submit{
+      width:100%;
+      border:0;
+      border-radius:11px;
+      background:#20d36b;
+      color:#04150a;
+      font-weight:800;
+      padding:12px;
+    }
+
+    .cancel{
+      width:100%;
+      margin-top:8px;
+      border:1px solid #333;
+      border-radius:11px;
+      background:#111;
+      color:#fff;
+      padding:11px;
+    }
+
+    #requestStatus{
+      margin-top:10px;
+      font-size:13px;
+      line-height:1.4;
     }
   </style>
 </head>
 
 <body>
+<div class="app">
 
-  <div class="chat">
-
-    <div class="header">
-      <div class="brand">AUREX AI</div>
-      <div class="title" id="businessName">Assistant IA</div>
-      <div class="status" id="status">● En ligne</div>
+  <header>
+    <div class="brand" id="brand">
+      Assistant IA
     </div>
-
-    <div id="messages">
-      <div class="message assistant">
-        Bonjour 👋 Comment puis-je vous aider ?
-      </div>
+    <div class="status" id="status">
+      ● Assistant disponible
     </div>
+  </header>
 
-    <div class="composer">
-      <textarea
-        id="messageInput"
-        placeholder="Écrivez votre message..."
-        rows="1"
-      ></textarea>
+  <main id="messages"></main>
 
-      <button id="sendButton">
-        Envoyer
-      </button>
-    </div>
+  <div class="actions" id="actions">
+    <button class="action" data-type="rendez-vous">
+      Prendre rendez-vous
+    </button>
 
-    <div class="footer">
-      Assistant IA propulsé par AUREX AI
-    </div>
+    <button class="action" data-type="devis">
+      Demander un devis
+    </button>
 
+    <button class="action" data-type="prospect">
+      Être recontacté
+    </button>
   </div>
 
-<script>
-  const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get("session_id");
+  <section id="requestPanel" class="panel hidden">
+    <h3 id="requestTitle">Votre demande</h3>
 
-  const messagesEl = document.getElementById("messages");
-  const inputEl = document.getElementById("messageInput");
-  const sendButton = document.getElementById("sendButton");
-  const businessNameEl = document.getElementById("businessName");
-  const statusEl = document.getElementById("status");
+    <p id="requestDescription">
+      Renseignez les informations nécessaires.
+    </p>
+
+    <form id="requestForm">
+
+      <div class="field">
+        <label for="nom">Nom</label>
+        <input id="nom" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label for="email">E-mail</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="email"
+        >
+      </div>
+
+      <div class="field">
+        <label for="telephone">Téléphone</label>
+        <input
+          id="telephone"
+          type="tel"
+          autocomplete="tel"
+        >
+      </div>
+
+      <div class="field">
+        <label for="besoin">
+          Votre besoin *
+        </label>
+        <textarea
+          id="besoin"
+          required
+          maxlength="1500"
+        ></textarea>
+      </div>
+
+      <div class="field">
+        <label for="service">
+          Service ou produit concerné
+        </label>
+        <input
+          id="service"
+          maxlength="500"
+        >
+      </div>
+
+      <div class="field" id="budgetField">
+        <label for="budget">
+          Budget éventuel
+        </label>
+        <input
+          id="budget"
+          maxlength="300"
+        >
+      </div>
+
+      <div id="appointmentFields" class="hidden">
+
+        <div class="field">
+          <label for="dateSouhaitee">
+            Date souhaitée
+          </label>
+          <input
+            id="dateSouhaitee"
+            type="date"
+          >
+        </div>
+
+        <div class="field">
+          <label for="heureSouhaitee">
+            Heure souhaitée
+          </label>
+          <input
+            id="heureSouhaitee"
+            type="time"
+          >
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label for="informations">
+          Informations complémentaires
+        </label>
+        <textarea
+          id="informations"
+          maxlength="1800"
+        ></textarea>
+      </div>
+
+      <label class="consent">
+        <input
+          id="consent"
+          type="checkbox"
+          required
+        >
+        <span>
+          J'accepte que ces informations soient
+          transmises à l'entreprise afin qu'elle
+          puisse traiter ma demande.
+        </span>
+      </label>
+
+      <button
+        class="submit"
+        id="requestSubmit"
+        type="submit"
+      >
+        Transmettre ma demande
+      </button>
+
+      <button
+        class="cancel"
+        id="requestCancel"
+        type="button"
+      >
+        Annuler
+      </button>
+
+      <div id="requestStatus"></div>
+
+    </form>
+  </section>
+
+  <form class="composer" id="chatForm">
+    <input
+      id="messageInput"
+      placeholder="Écrivez votre message..."
+      autocomplete="off"
+    >
+
+    <button id="sendButton" type="submit">
+      Envoyer
+    </button>
+  </form>
+
+</div>
+
+<script>
+  const params =
+    new URLSearchParams(location.search);
+
+  const sessionId =
+    params.get("session_id") || "";
+
+  const messages =
+    document.getElementById("messages");
+
+  const chatForm =
+    document.getElementById("chatForm");
+
+  const messageInput =
+    document.getElementById("messageInput");
+
+  const sendButton =
+    document.getElementById("sendButton");
+
+  const brand =
+    document.getElementById("brand");
+
+  const status =
+    document.getElementById("status");
+
+  const requestPanel =
+    document.getElementById("requestPanel");
+
+  const requestForm =
+    document.getElementById("requestForm");
+
+  const requestTitle =
+    document.getElementById("requestTitle");
+
+  const requestDescription =
+    document.getElementById("requestDescription");
+
+  const appointmentFields =
+    document.getElementById("appointmentFields");
+
+  const requestStatus =
+    document.getElementById("requestStatus");
+
+  const requestSubmit =
+    document.getElementById("requestSubmit");
+
+  const requestCancel =
+    document.getElementById("requestCancel");
 
   let history = [];
-  let sending = false;
+  let requestType = "prospect";
 
-  function addMessage(text, type) {
-    const div = document.createElement("div");
-    div.className = "message " + type;
+  function addMessage(text, role) {
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "msg " +
+      (
+        role === "user"
+          ? "user"
+          : "assistant"
+      );
+
     div.textContent = text;
-    messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
+
+    messages.appendChild(div);
+
+    messages.scrollTop =
+      messages.scrollHeight;
   }
 
-  function setTyping(show) {
-    const old = document.getElementById("typing");
-    if (old) old.remove();
-
-    if (show) {
-      const div = document.createElement("div");
-      div.id = "typing";
-      div.className = "typing";
-      div.textContent = "L'assistant écrit...";
-      messagesEl.appendChild(div);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
+  function setChatEnabled(enabled) {
+    messageInput.disabled = !enabled;
+    sendButton.disabled = !enabled;
   }
 
-  async function sendMessage() {
-    if (sending) return;
+  function openRequest(type) {
+    requestType = type;
 
-    const message = inputEl.value.trim();
+    requestStatus.textContent = "";
 
-    if (!message) return;
+    appointmentFields.classList.toggle(
+      "hidden",
+      type !== "rendez-vous"
+    );
 
-    if (!sessionId) {
-      addMessage(
-        "Accès au chatbot invalide. Veuillez utiliser le lien reçu après votre activation.",
-        "error"
-      );
-      return;
+    if (type === "rendez-vous") {
+      requestTitle.textContent =
+        "Demande de rendez-vous";
+
+      requestDescription.textContent =
+        "Indiquez vos coordonnées et le créneau souhaité. Le rendez-vous reste à confirmer par l'entreprise.";
     }
 
-    sending = true;
-    sendButton.disabled = true;
+    if (type === "devis") {
+      requestTitle.textContent =
+        "Demande de devis";
 
-    addMessage(message, "user");
+      requestDescription.textContent =
+        "Expliquez votre besoin afin que l'entreprise puisse préparer ou étudier votre demande.";
+    }
 
-    inputEl.value = "";
-    inputEl.style.height = "auto";
+    if (type === "prospect") {
+      requestTitle.textContent =
+        "Être recontacté";
 
-    setTyping(true);
+      requestDescription.textContent =
+        "Laissez vos coordonnées et votre besoin pour être recontacté par l'entreprise.";
+    }
 
-    try {
-      const response = await fetch(
-        "/.netlify/functions/client-chat",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            sessionId,
-            message,
-            history
-          })
-        }
+    requestPanel.classList.remove("hidden");
+
+    requestPanel.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  document
+    .querySelectorAll(".action")
+    .forEach((button) => {
+      button.addEventListener(
+        "click",
+        () => openRequest(
+          button.dataset.type
+        )
       );
+    });
 
-      const data = await response.json();
+  requestCancel.addEventListener(
+    "click",
+    () => {
+      requestPanel.classList.add("hidden");
+      requestStatus.textContent = "";
+    }
+  );
 
-      setTyping(false);
+  chatForm.addEventListener(
+    "submit",
+    async (event) => {
+      event.preventDefault();
 
-      if (!response.ok) {
+      const message =
+        messageInput.value.trim();
+
+      if (!message) return;
+
+      if (
+        !sessionId ||
+        !sessionId.startsWith("cs_")
+      ) {
         addMessage(
-          data.error || "Assistant temporairement indisponible.",
-          "error"
+          "Votre accès à cet assistant est invalide.",
+          "assistant"
         );
-
-        if (response.status === 403) {
-          statusEl.textContent = "● Accès inactif";
-        }
-
         return;
       }
 
-      if (data.entreprise) {
-        businessNameEl.textContent =
-          "Assistant " + data.entreprise;
+      addMessage(message, "user");
 
-        document.title =
-          "Assistant " + data.entreprise;
-      }
-
-      addMessage(data.answer, "assistant");
+      const previousHistory =
+        history.slice(-12);
 
       history.push({
         role: "user",
         content: message
       });
 
-      history.push({
-        role: "assistant",
-        content: data.answer
-      });
+      messageInput.value = "";
+      setChatEnabled(false);
 
-      history = history.slice(-8);
+      try {
+        const response = await fetch(
+          "/.netlify/functions/client-chat",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body: JSON.stringify({
+              sessionId,
+              message,
+              history: previousHistory
+            })
+          }
+        );
 
-    } catch (error) {
-      setTyping(false);
+        const data =
+          await response.json();
 
-      addMessage(
-        "Impossible de contacter l'assistant pour le moment.",
-        "error"
-      );
-    } finally {
-      sending = false;
-      sendButton.disabled = false;
-      inputEl.focus();
+        if (response.status === 403) {
+          status.textContent =
+            "● Accès inactif";
+
+          addMessage(
+            data.error ||
+            "Votre accès est actuellement inactif.",
+            "assistant"
+          );
+
+          setChatEnabled(false);
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error(
+            data.error ||
+            "Assistant indisponible"
+          );
+        }
+
+        if (data.entreprise) {
+          brand.textContent =
+            `Assistant — ${data.entreprise}`;
+        }
+
+        const answer =
+          String(data.answer || "").trim();
+
+        if (!answer) {
+          throw new Error(
+            "Réponse vide"
+          );
+        }
+
+        addMessage(
+          answer,
+          "assistant"
+        );
+
+        history.push({
+          role: "assistant",
+          content: answer
+        });
+
+      } catch (error) {
+        addMessage(
+          "Je rencontre un problème temporaire. Veuillez réessayer.",
+          "assistant"
+        );
+      } finally {
+        if (
+          status.textContent !==
+          "● Accès inactif"
+        ) {
+          setChatEnabled(true);
+          messageInput.focus();
+        }
+      }
     }
-  }
+  );
 
-  sendButton.addEventListener("click", sendMessage);
-
-  inputEl.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey
-    ) {
+  requestForm.addEventListener(
+    "submit",
+    async (event) => {
       event.preventDefault();
-      sendMessage();
+
+      requestStatus.textContent = "";
+
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
+
+      const telephone =
+        document
+          .getElementById("telephone")
+          .value
+          .trim();
+
+      const besoin =
+        document
+          .getElementById("besoin")
+          .value
+          .trim();
+
+      const consent =
+        document
+          .getElementById("consent")
+          .checked;
+
+      if (!email && !telephone) {
+        requestStatus.textContent =
+          "Indiquez au moins un e-mail ou un numéro de téléphone.";
+        return;
+      }
+
+      if (!besoin) {
+        requestStatus.textContent =
+          "Expliquez brièvement votre besoin.";
+        return;
+      }
+
+      if (!consent) {
+        requestStatus.textContent =
+          "Votre accord est nécessaire pour transmettre la demande.";
+        return;
+      }
+
+      requestSubmit.disabled = true;
+      requestSubmit.textContent =
+        "Transmission...";
+
+      try {
+        const payload = {
+          sessionId,
+          type: requestType,
+
+          nom:
+            document
+              .getElementById("nom")
+              .value
+              .trim(),
+
+          email,
+          telephone,
+          besoin,
+
+          service:
+            document
+              .getElementById("service")
+              .value
+              .trim(),
+
+          budget:
+            document
+              .getElementById("budget")
+              .value
+              .trim(),
+
+          dateSouhaitee:
+            document
+              .getElementById("dateSouhaitee")
+              .value,
+
+          heureSouhaitee:
+            document
+              .getElementById("heureSouhaitee")
+              .value,
+
+          informations:
+            document
+              .getElementById("informations")
+              .value
+              .trim(),
+
+          consent: true
+        };
+
+        const response = await fetch(
+          "/.netlify/functions/submit-request",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+            body: JSON.stringify(payload)
+          }
+        );
+
+        const data =
+          await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.error ||
+            "Transmission impossible"
+          );
+        }
+
+        if (
+          data.success !== true ||
+          data.transmitted !== true
+        ) {
+          throw new Error(
+            "Transmission non confirmée"
+          );
+        }
+
+        const confirmation =
+          data.message ||
+          "Votre demande a bien été transmise.";
+
+        requestStatus.textContent =
+          confirmation;
+
+        addMessage(
+          confirmation,
+          "assistant"
+        );
+
+        requestForm.reset();
+
+        setTimeout(() => {
+          requestPanel.classList.add(
+            "hidden"
+          );
+          requestStatus.textContent = "";
+        }, 2500);
+
+      } catch (error) {
+        requestStatus.textContent =
+          error.message ||
+          "La demande n'a pas pu être transmise. Veuillez réessayer.";
+      } finally {
+        requestSubmit.disabled = false;
+        requestSubmit.textContent =
+          "Transmettre ma demande";
+      }
     }
-  });
+  );
 
-  inputEl.addEventListener("input", () => {
-    inputEl.style.height = "auto";
-    inputEl.style.height =
-      Math.min(inputEl.scrollHeight, 130) + "px";
-  });
+  if (
+    !sessionId ||
+    !sessionId.startsWith("cs_")
+  ) {
+    status.textContent =
+      "● Accès invalide";
 
-  if (!sessionId) {
-    statusEl.textContent = "● Activation requise";
+    setChatEnabled(false);
 
     addMessage(
-      "Ce chatbot doit être ouvert depuis le lien d'activation Aurex AI.",
-      "error"
+      "Ce lien d'accès au chatbot est invalide.",
+      "assistant"
     );
-
-    sendButton.disabled = true;
-    inputEl.disabled = true;
+  } else {
+    addMessage(
+      "Bonjour 👋 Comment puis-je vous aider ?",
+      "assistant"
+    );
   }
 </script>
 
