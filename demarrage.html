@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Démarrage de votre projet - AUREX AI</title>
+  <title>Configuration de votre assistant - AUREX AI</title>
 
   <meta
     name="description"
-    content="Démarrez votre projet AUREX AI après votre commande."
+    content="Configurez votre assistant IA AUREX AI après votre commande."
   >
 
   <style>
@@ -22,9 +22,7 @@
       --error:#ff7777;
     }
 
-    *{
-      box-sizing:border-box;
-    }
+    *{box-sizing:border-box}
 
     body{
       margin:0;
@@ -35,7 +33,7 @@
     }
 
     .wrap{
-      width:min(760px,calc(100% - 32px));
+      width:min(780px,calc(100% - 32px));
       margin:0 auto;
       padding:32px 0 56px;
     }
@@ -62,10 +60,23 @@
       margin:0 0 16px;
     }
 
+    h2{
+      font-size:20px;
+      margin:32px 0 5px;
+      padding-top:22px;
+      border-top:1px solid var(--line);
+    }
+
     .intro{
       color:var(--muted);
       font-size:17px;
       margin-bottom:28px;
+    }
+
+    .sectionText{
+      color:var(--muted);
+      font-size:14px;
+      margin:0 0 16px;
     }
 
     .card{
@@ -91,17 +102,25 @@
       background:#111514;
       color:#fff;
       font-size:16px;
+      font-family:Arial,Helvetica,sans-serif;
     }
 
     textarea{
-      min-height:120px;
+      min-height:115px;
       resize:vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus{
+      outline:none;
+      border-color:var(--accent);
     }
 
     button{
       width:100%;
-      margin-top:22px;
-      padding:15px;
+      margin-top:26px;
+      padding:16px;
       border:0;
       border-radius:10px;
       background:var(--accent);
@@ -139,302 +158,318 @@
       text-decoration:none;
       border-bottom:1px solid #666;
     }
-
-    .hidden{
-      display:none;
-    }
   </style>
 </head>
 
 <body>
 
-  <main class="wrap">
+<main class="wrap">
 
-    <div class="brand">
-      ↗ AUREX AI
+  <div class="brand">↗ AUREX AI</div>
+
+  <div class="badge">
+    ✓ CONFIGURATION DE VOTRE ASSISTANT
+  </div>
+
+  <h1>
+    Donnez à votre IA les informations dont elle a besoin.
+  </h1>
+
+  <p class="intro">
+    Plus les informations sont précises, plus votre assistant
+    pourra répondre correctement à vos clients, conseiller vos
+    prospects et gérer leurs demandes.
+  </p>
+
+  <section class="card">
+
+    <div id="activationError" class="error">
+      Cette page doit être ouverte depuis la confirmation
+      de paiement AUREX AI.
     </div>
 
-    <div class="badge">
-      ✓ ÉTAPE DE DÉMARRAGE
-    </div>
+    <form
+      id="onboardingForm"
+      method="POST"
+      action="/.netlify/functions/provision-client"
+    >
 
-    <h1>
-      Votre projet commence ici.
-    </h1>
-
-    <p class="intro">
-      Merci pour votre confiance.
-      Remplissez ce formulaire avec les informations utiles
-      pour préparer votre solution AUREX AI.
-    </p>
-
-    <section class="card">
-
-      <div id="activationError" class="error">
-        Cette page doit être ouverte depuis la confirmation
-        de paiement AUREX AI.
-      </div>
-
-      <form
-        id="onboardingForm"
-        name="demarrage-client"
-        method="POST"
-        action="/.netlify/functions/provision-client"
+      <input
+        type="hidden"
+        id="stripe_session_id"
+        name="Stripe_session_id"
+        value=""
       >
 
-        <input
-          type="hidden"
-          id="stripe_session_id"
-          name="Stripe_session_id"
-          value=""
-        >
+      <h2>1. Votre entreprise</h2>
 
-        <label for="nom">
-          Votre nom *
-        </label>
+      <p class="sectionText">
+        Informations principales permettant à l'assistant
+        d'identifier votre entreprise.
+      </p>
 
-        <input
-          id="nom"
-          name="Nom"
-          type="text"
-          required
-        >
+      <label for="nom">Votre nom *</label>
+      <input id="nom" name="Nom" type="text" required>
 
-        <label for="email">
-          Votre e-mail *
-        </label>
+      <label for="email">Votre e-mail *</label>
+      <input id="email" name="Email" type="email" required>
 
-        <input
-          id="email"
-          name="Email"
-          type="email"
-          required
-        >
+      <label for="entreprise">Entreprise / marque *</label>
+      <input id="entreprise" name="Entreprise" type="text" required>
 
-        <label for="entreprise">
-          Entreprise / marque *
-        </label>
+      <label for="secteur">Secteur d'activité *</label>
+      <input
+        id="secteur"
+        name="Secteur"
+        type="text"
+        required
+        placeholder="Ex. garage, immobilier, restaurant, coiffure, e-commerce..."
+      >
 
-        <input
-          id="entreprise"
-          name="Entreprise"
-          type="text"
-          required
-        >
+      <label for="activite">Présentation de votre activité *</label>
+      <textarea
+        id="activite"
+        name="Activite"
+        required
+        placeholder="Expliquez ce que fait votre entreprise et à quels types de clients elle s'adresse."
+      ></textarea>
 
-        <label for="site">
-          Site web ou réseau social
-        </label>
+      <label for="site">Site web ou réseau social</label>
+      <input
+        id="site"
+        name="Site"
+        type="url"
+        placeholder="https://"
+      >
 
-        <input
-          id="site"
-          name="Site"
-          type="url"
-          placeholder="https://"
-        >
+      <label for="telephone">Téléphone professionnel</label>
+      <input
+        id="telephone"
+        name="Telephone"
+        type="tel"
+        placeholder="+33..."
+      >
 
-        <label for="offre">
-          Offre achetée *
-        </label>
+      <label for="adresse">Adresse / zone desservie</label>
+      <textarea
+        id="adresse"
+        name="Adresse_zone"
+        placeholder="Adresse, villes, départements, régions ou pays desservis."
+      ></textarea>
 
-        <select
-          id="offre"
-          name="Offre"
-          required
-        >
-          <option value="">
-            Choisir une offre
-          </option>
+      <h2>2. Ce que vous proposez</h2>
 
-          <option>
-            Acquisition clients par IA — 697 €
-          </option>
+      <label for="services">Services ou produits *</label>
+      <textarea
+        id="services"
+        name="Services"
+        required
+        placeholder="Listez vos principaux services ou produits et expliquez-les brièvement."
+      ></textarea>
 
-          <option>
-            Agent IA personnalisé — 997 €
-          </option>
+      <label for="tarifs">Tarifs connus</label>
+      <textarea
+        id="tarifs"
+        name="Tarifs"
+        placeholder="Indiquez uniquement les prix que l'assistant est autorisé à communiquer."
+      ></textarea>
 
-          <option>
-            Accompagnement mensuel — 497 €/mois
-          </option>
+      <label for="horaires">Horaires d'ouverture</label>
+      <textarea
+        id="horaires"
+        name="Horaires"
+        placeholder="Ex. lundi-vendredi 8h-18h, samedi 9h-13h."
+      ></textarea>
 
-          <option>
-            Autre / offre personnalisée
-          </option>
-        </select>
+      <label for="paiements">Moyens de paiement / conditions commerciales</label>
+      <textarea
+        id="paiements"
+        name="Paiements_conditions"
+        placeholder="Carte, espèces, virement, acompte, livraison, annulation..."
+      ></textarea>
 
-        <label for="langue">
-          Langue principale *
-        </label>
+      <h2>3. Questions des clients</h2>
 
-        <select
-          id="langue"
-          name="Langue"
-          required
-        >
-          <option value="">
-            Choisir
-          </option>
+      <label for="faq">Questions fréquentes et réponses</label>
+      <textarea
+        id="faq"
+        name="Questions_frequentes"
+        placeholder="Ex. Faites-vous les vidanges ? Oui.&#10;Travaillez-vous le samedi ? Oui, de 9h à 13h."
+      ></textarea>
 
-          <option>
-            Français
-          </option>
+      <label for="infos">Autres informations importantes</label>
+      <textarea
+        id="infos"
+        name="Informations_importantes"
+        placeholder="Garanties, délais, règles, restrictions, informations particulières..."
+      ></textarea>
 
-          <option>
-            Anglais
-          </option>
+      <h2>4. Rendez-vous</h2>
 
-          <option>
-            Français + Anglais
-          </option>
+      <p class="sectionText">
+        L'assistant pourra recueillir une demande de rendez-vous.
+        Il ne confirmera jamais un créneau sans disponibilité vérifiée.
+      </p>
 
-          <option>
-            Autre
-          </option>
-        </select>
+      <label for="rdv">Comment gérez-vous vos rendez-vous ?</label>
+      <textarea
+        id="rdv"
+        name="Regles_rdv"
+        placeholder="Informations à demander, horaires possibles, durée habituelle, lien de réservation si vous en avez un..."
+      ></textarea>
 
-        <label for="objectif">
-          Objectif principal *
-        </label>
+      <h2>5. Demandes de devis</h2>
 
-        <textarea
-          id="objectif"
-          name="Objectif"
-          required
-          placeholder="Ex. répondre automatiquement aux prospects, qualifier les demandes, automatiser le suivi..."
-        ></textarea>
+      <label for="devis">Informations nécessaires pour préparer un devis</label>
+      <textarea
+        id="devis"
+        name="Regles_devis"
+        placeholder="Ex. type de prestation, véhicule, surface, budget, adresse, photos nécessaires..."
+      ></textarea>
 
-        <label for="activite">
-          Présentez brièvement votre activité *
-        </label>
+      <h2>6. Prospects et ventes</h2>
 
-        <textarea
-          id="activite"
-          name="Activite"
-          required
-          placeholder="Que vendez-vous ? À quels clients ?"
-        ></textarea>
+      <label for="objectif">Objectif principal de l'assistant *</label>
+      <textarea
+        id="objectif"
+        name="Objectif"
+        required
+        placeholder="Ex. obtenir plus de demandes de devis, prendre des rendez-vous, qualifier les prospects..."
+      ></textarea>
 
-        <label for="faq">
-          Questions fréquentes de vos clients
-        </label>
+      <label for="commercial">Consignes commerciales</label>
+      <textarea
+        id="commercial"
+        name="Consignes_commerciales"
+        placeholder="Offres à mettre en avant, arguments importants, types de clients recherchés, objections fréquentes..."
+      ></textarea>
 
-        <textarea
-          id="faq"
-          name="Questions_frequentes"
-          placeholder="Ajoutez les questions auxquelles votre assistant devra savoir répondre."
-        ></textarea>
+      <label for="leadfields">Informations à récupérer auprès d'un prospect</label>
+      <textarea
+        id="leadfields"
+        name="Champs_prospect"
+        placeholder="Ex. nom, téléphone, e-mail, besoin, budget, ville..."
+      ></textarea>
 
-        <label for="infos">
-          Informations ou consignes importantes
-        </label>
+      <h2>7. Transmission à votre entreprise</h2>
 
-        <textarea
-          id="infos"
-          name="Informations_importantes"
-          placeholder="Horaires, zones desservies, ton souhaité, restrictions, liens utiles..."
-        ></textarea>
+      <label for="destination">
+        E-mail où recevoir les demandes clients *
+      </label>
 
-        <button
-          id="submitButton"
-          type="submit"
-        >
-          Activer mon chatbot →
-        </button>
+      <input
+        id="destination"
+        name="Email_destination"
+        type="email"
+        required
+        placeholder="contact@votreentreprise.fr"
+      >
 
-        <p class="note">
-          N'envoyez jamais de mot de passe,
-          clé API, numéro complet de carte bancaire
-          ou autre donnée bancaire sensible.
-        </p>
+      <p class="sectionText">
+        Les prospects, demandes de devis et demandes de
+        rendez-vous pourront être transmis à cette adresse
+        lorsque le système de transmission est activé.
+      </p>
 
-      </form>
+      <h2>8. Personnalisation</h2>
 
-    </section>
+      <label for="langue">Langue principale *</label>
 
-    <a class="back" href="/">
-      ← Retour au site
-    </a>
+      <select id="langue" name="Langue" required>
+        <option value="">Choisir</option>
+        <option>Français</option>
+        <option>Anglais</option>
+        <option>Français + Anglais</option>
+        <option>Autre</option>
+      </select>
 
-  </main>
+      <label for="ton">Ton souhaité</label>
 
-  <script>
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
+      <select id="ton" name="Ton">
+        <option>Professionnel et naturel</option>
+        <option>Chaleureux et accueillant</option>
+        <option>Commercial et dynamique</option>
+        <option>Sobre et premium</option>
+      </select>
 
-    const sessionId =
-      String(
-        params.get("session_id") || ""
-      ).trim();
+      <label for="offre">Offre AUREX AI *</label>
 
-    const stripeField =
-      document.getElementById(
-        "stripe_session_id"
-      );
+      <select id="offre" name="Offre" required>
+        <option value="">Choisir une offre</option>
+        <option>Acquisition clients par IA — 697 €</option>
+        <option>Agent IA personnalisé — 997 €</option>
+        <option>Accompagnement mensuel — 497 €/mois</option>
+        <option>Autre / offre personnalisée</option>
+      </select>
 
-    const form =
-      document.getElementById(
-        "onboardingForm"
-      );
+      <button id="submitButton" type="submit">
+        Configurer mon assistant →
+      </button>
 
-    const submitButton =
-      document.getElementById(
-        "submitButton"
-      );
+      <p class="note">
+        N'envoyez jamais de mot de passe, clé API,
+        numéro complet de carte bancaire, information médicale
+        ou autre donnée sensible inutile au fonctionnement de l'assistant.
+      </p>
 
-    const activationError =
-      document.getElementById(
-        "activationError"
-      );
+    </form>
 
-    /*
-      Le formulaire ne peut être envoyé
-      que si Stripe nous a transmis
-      une vraie Checkout Session.
-    */
-    const validSession =
-      sessionId.startsWith("cs_");
+  </section>
 
-    if (validSession) {
-      stripeField.value = sessionId;
+  <a class="back" href="/">
+    ← Retour au site
+  </a>
 
-      activationError.style.display =
-        "none";
-    } else {
-      activationError.style.display =
-        "block";
+</main>
 
-      submitButton.disabled = true;
+<script>
+  const params =
+    new URLSearchParams(window.location.search);
+
+  const sessionId =
+    String(params.get("session_id") || "").trim();
+
+  const stripeField =
+    document.getElementById("stripe_session_id");
+
+  const form =
+    document.getElementById("onboardingForm");
+
+  const submitButton =
+    document.getElementById("submitButton");
+
+  const activationError =
+    document.getElementById("activationError");
+
+  const validSession =
+    sessionId.startsWith("cs_");
+
+  if (validSession) {
+    stripeField.value = sessionId;
+    activationError.style.display = "none";
+  } else {
+    activationError.style.display = "block";
+    submitButton.disabled = true;
+  }
+
+  form.addEventListener("submit", function(event) {
+    stripeField.value = sessionId;
+
+    if (
+      !stripeField.value ||
+      !stripeField.value.startsWith("cs_")
+    ) {
+      event.preventDefault();
+
+      activationError.style.display = "block";
+
+      activationError.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
     }
-
-    /*
-      Deuxième sécurité juste avant
-      l'envoi du formulaire.
-    */
-    form.addEventListener(
-      "submit",
-      function(event) {
-        stripeField.value = sessionId;
-
-        if (
-          !stripeField.value ||
-          !stripeField.value.startsWith("cs_")
-        ) {
-          event.preventDefault();
-
-          activationError.style.display =
-            "block";
-
-          activationError.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-          });
-        }
-      }
-    );
-  </script>
+  });
+</script>
 
 </body>
 </html>
