@@ -139,6 +139,9 @@ const openaiKey = process.env.OPENAI_API_KEY;
     const offre = String(metadata.offre || "").trim();
     const informations =
       String(metadata.informations || "").trim();
+    const objectif = String(metadata.objectif || "").trim();
+const activite = String(metadata.activite || "").trim();
+const faq = String(metadata.faq || "").trim();
 
     const safeHistory = history
       .filter(
@@ -164,7 +167,14 @@ Site ou réseau social : ${site || "non renseigné"}
 Offre AUREX AI : ${offre || "Assistant IA"}
 Informations importantes :
 ${informations || "Aucune information supplémentaire fournie."}
+Objectif principal :
+${objectif || "Non renseigné"}
 
+Activité de l'entreprise :
+${activite || "Non renseignée"}
+
+Questions fréquentes des clients :
+${faq || "Aucune question fréquente renseignée"}
 RÈGLES
 
 - Réponds comme l'assistant officiel de l'entreprise.
