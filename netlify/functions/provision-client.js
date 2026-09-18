@@ -49,9 +49,9 @@ exports.handler = async function (event) {
     const body = parseBody(event);
 
     /*
-      IMPORTANT :
-      on accepte toutes les variantes utilisées
-      par notre formulaire Aurex AI.
+      SESSION STRIPE
+      On conserve les variantes déjà compatibles
+      avec le système AUREX AI existant.
     */
     const sessionId = getField(
       body,
@@ -91,13 +91,12 @@ exports.handler = async function (event) {
 
       return {
         statusCode: 500,
-        body:
-          "Configuration Stripe manquante."
+        body: "Configuration Stripe manquante."
       };
     }
 
     /*
-      Informations envoyées par le client.
+      IDENTITÉ DE L'ENTREPRISE
     */
     const nom = limit(
       getField(body, "Nom", "nom"),
@@ -118,6 +117,24 @@ exports.handler = async function (event) {
       200
     );
 
+    const secteur = limit(
+      getField(
+        body,
+        "Secteur",
+        "secteur"
+      ),
+      250
+    );
+
+    const activite = limit(
+      getField(
+        body,
+        "Activite",
+        "activite"
+      ),
+      1000
+    );
+
     const site = limit(
       getField(
         body,
@@ -127,6 +144,163 @@ exports.handler = async function (event) {
         "Site_web_ou_reseau_social"
       ),
       300
+    );
+
+    const telephone = limit(
+      getField(
+        body,
+        "Telephone",
+        "telephone"
+      ),
+      100
+    );
+
+    const adresseZone = limit(
+      getField(
+        body,
+        "Adresse_zone",
+        "adresse_zone",
+        "Adresse",
+        "adresse"
+      ),
+      700
+    );
+
+    /*
+      CONNAISSANCES COMMERCIALES
+    */
+    const services = limit(
+      getField(
+        body,
+        "Services",
+        "services"
+      ),
+      1800
+    );
+
+    const tarifs = limit(
+      getField(
+        body,
+        "Tarifs",
+        "tarifs"
+      ),
+      1200
+    );
+
+    const horaires = limit(
+      getField(
+        body,
+        "Horaires",
+        "horaires"
+      ),
+      800
+    );
+
+    const paiementsConditions = limit(
+      getField(
+        body,
+        "Paiements_conditions",
+        "paiements_conditions"
+      ),
+      1000
+    );
+
+    const faq = limit(
+      getField(
+        body,
+        "Questions_frequentes",
+        "questions_frequentes",
+        "faq"
+      ),
+      1800
+    );
+
+    const informations = limit(
+      getField(
+        body,
+        "Informations_importantes",
+        "informations",
+        "Projet"
+      ),
+      1800
+    );
+
+    /*
+      RENDEZ-VOUS / DEVIS / PROSPECTS
+    */
+    const reglesRdv = limit(
+      getField(
+        body,
+        "Regles_rdv",
+        "regles_rdv"
+      ),
+      1200
+    );
+
+    const reglesDevis = limit(
+      getField(
+        body,
+        "Regles_devis",
+        "regles_devis"
+      ),
+      1200
+    );
+
+    const objectif = limit(
+      getField(
+        body,
+        "Objectif",
+        "objectif"
+      ),
+      1000
+    );
+
+    const consignesCommerciales = limit(
+      getField(
+        body,
+        "Consignes_commerciales",
+        "consignes_commerciales"
+      ),
+      1200
+    );
+
+    const champsProspect = limit(
+      getField(
+        body,
+        "Champs_prospect",
+        "champs_prospect"
+      ),
+      700
+    );
+
+    const emailDestination = limit(
+      getField(
+        body,
+        "Email_destination",
+        "email_destination"
+      ),
+      200
+    );
+
+    /*
+      PERSONNALISATION
+    */
+    const langue = limit(
+      getField(
+        body,
+        "Langue",
+        "langue"
+      ),
+      80
+    );
+
+    const ton = limit(
+      getField(
+        body,
+        "Ton",
+        "ton"
+      ),
+      120
     );
 
     const offre = limit(
@@ -139,64 +313,29 @@ exports.handler = async function (event) {
       200
     );
 
-    const langue = limit(
-      getField(
-        body,
-        "Langue",
-        "langue"
-      ),
-      80
-    );
-
-    const objectif = limit(
-      getField(
-        body,
-        "Objectif",
-        "objectif"
-      ),
-      1000
-    );
-
-    const activite = limit(
-      getField(
-        body,
-        "Activite",
-        "activite"
-      ),
-      1000
-    );
-
-    const faq = limit(
-      getField(
-        body,
-        "Questions_frequentes",
-        "questions_frequentes",
-        "faq"
-      ),
-      1500
-    );
-
-    const informations = limit(
-      getField(
-        body,
-        "Informations_importantes",
-        "informations",
-        "Projet"
-      ),
-      1500
-    );
-
-    if (!nom || !email || !entreprise) {
+    /*
+      CHAMPS MINIMUM OBLIGATOIRES
+    */
+    if (
+      !nom ||
+      !email ||
+      !entreprise ||
+      !secteur ||
+      !activite ||
+      !services ||
+      !objectif ||
+      !emailDestination
+    ) {
       return {
         statusCode: 400,
         body:
-          "Nom, email et entreprise obligatoires."
+          "Certaines informations obligatoires sont manquantes."
       };
     }
 
     /*
-      Vérification de la session directement
-      auprès de Stripe.
+      VÉRIFICATION DE L'ABONNEMENT
+      DIRECTEMENT AUPRÈS DE STRIPE.
     */
     const stripeResponse = await fetch(
       `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(
@@ -241,10 +380,6 @@ exports.handler = async function (event) {
         subscription.status
       );
 
-    /*
-      Le chatbot est réservé à l'abonnement
-      mensuel Aurex AI.
-    */
     const validSubscription =
       session.mode === "subscription" &&
       session.status === "complete" &&
@@ -271,72 +406,102 @@ exports.handler = async function (event) {
     }
 
     /*
-      Enregistre les informations du client
-      dans la Checkout Session Stripe.
+      ENREGISTREMENT DE LA BASE DE
+      CONNAISSANCES DANS STRIPE.
 
-      client-chat.js les récupérera ensuite
-      pour personnaliser automatiquement
-      le chatbot.
+      IMPORTANT :
+      les valeurs sont volontairement limitées
+      afin de rester compatibles avec les
+      métadonnées Stripe.
     */
     const metadata =
       new URLSearchParams();
 
-    metadata.set(
-      "metadata[nom]",
-      nom
+    const setMeta = (key, value) => {
+      metadata.set(
+        `metadata[${key}]`,
+        limit(value, 450)
+      );
+    };
+
+    setMeta("nom", nom);
+    setMeta("email", email);
+    setMeta("entreprise", entreprise);
+
+    setMeta("secteur", secteur);
+    setMeta("activite", activite);
+
+    setMeta("site", site);
+    setMeta("telephone", telephone);
+    setMeta("adresse_zone", adresseZone);
+
+    setMeta("services", services);
+    setMeta("tarifs", tarifs);
+    setMeta("horaires", horaires);
+
+    setMeta(
+      "paiements_conditions",
+      paiementsConditions
     );
 
-    metadata.set(
-      "metadata[email]",
-      email
+    setMeta("faq", faq);
+    setMeta(
+      "informations",
+      informations
     );
 
-    metadata.set(
-      "metadata[entreprise]",
-      entreprise
+    setMeta(
+      "regles_rdv",
+      reglesRdv
     );
 
-    metadata.set(
-      "metadata[site]",
-      site
+    setMeta(
+      "regles_devis",
+      reglesDevis
     );
 
-    metadata.set(
-      "metadata[offre]",
+    setMeta(
+      "objectif",
+      objectif
+    );
+
+    setMeta(
+      "consignes_commerciales",
+      consignesCommerciales
+    );
+
+    setMeta(
+      "champs_prospect",
+      champsProspect
+    );
+
+    setMeta(
+      "email_destination",
+      emailDestination
+    );
+
+    setMeta("langue", langue);
+    setMeta("ton", ton);
+
+    setMeta(
+      "offre",
       offre ||
         "Accompagnement mensuel AUREX AI"
     );
 
-    metadata.set(
-      "metadata[langue]",
-      langue
-    );
-
-    metadata.set(
-      "metadata[objectif]",
-      objectif
-    );
-
-    metadata.set(
-      "metadata[activite]",
-      activite
-    );
-
-    metadata.set(
-      "metadata[faq]",
-      faq
-    );
-
-    metadata.set(
-      "metadata[informations]",
-      informations
-    );
-
-    metadata.set(
-      "metadata[onboarding_complete]",
+    setMeta(
+      "onboarding_complete",
       "true"
     );
 
+    setMeta(
+      "aurex_version",
+      "2"
+    );
+
+    /*
+      MISE À JOUR DE LA CHECKOUT SESSION.
+    */
     const updateResponse = await fetch(
       `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(
         sessionId
@@ -379,15 +544,15 @@ exports.handler = async function (event) {
         subscriptionStatus:
           subscription.status,
         entreprise,
+        secteur,
         onboarding: true
       }
     );
 
     /*
-      Tout est validé.
-
-      Le client est envoyé directement
-      vers son chatbot personnalisé.
+      LE PARCOURS QUI FONCTIONNE DÉJÀ
+      EST CONSERVÉ :
+      activation -> chatbot personnalisé.
     */
     return {
       statusCode: 303,
