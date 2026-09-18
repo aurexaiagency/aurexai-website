@@ -281,7 +281,7 @@ RÈGLES
       statusCode: 500,
       headers: jsonHeaders,
       body: JSON.stringify({
-        error: "Erreur du chatbot"
+        error: "Erreur du chatbot : " + String(error?.message || error)
       })
     };
   }
