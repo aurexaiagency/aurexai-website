@@ -207,7 +207,7 @@ RÈGLES
         },
         body: JSON.stringify({
           model:
-            Netlify.env.get("OPENAI_MODEL") ||
+            process.env.OPENAI_MODEL ||
             "gpt-5.6-luna",
           instructions,
           input,
