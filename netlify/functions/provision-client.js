@@ -550,23 +550,48 @@ exports.handler = async function (event) {
     );
 
     /*
-      LE PARCOURS QUI FONCTIONNE DÉJÀ
-      EST CONSERVÉ :
-      activation -> chatbot personnalisé.
-    */
-    return {
-      statusCode: 303,
-      headers: {
-        Location:
-  "/acces.html?session_id=" +
-  encodeURIComponent(sessionId),
-          
-          
-        "Cache-Control": "no-store"
-      },
-      body: ""
-    };
+  CRÉATION DE L'ACCÈS SÉCURISÉ
+*/
+const accessResponse = await fetch(
+  "https://getaurexai.com/.netlify/functions/create-access",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      session_id: sessionId
+    })
+  }
+);
 
+const accessData = await accessResponse.json();
+
+if (
+  !accessResponse.ok ||
+  !accessData.token
+) {
+  console.error(
+    "AUREX access creation failed",
+    accessData
+  );
+
+  return {
+    statusCode: 502,
+    body: "Impossible de créer l'accès sécurisé."
+  };
+}
+
+return {
+  statusCode: 303,
+  headers: {
+    Location:
+      "/acces.html?token=" +
+      encodeURIComponent(accessData.token),
+    "Cache-Control": "no-store"
+  },
+  body: ""
+};
   } catch (error) {
     console.error(
       "AUREX provision client error",
