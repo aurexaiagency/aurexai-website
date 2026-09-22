@@ -1,9 +1,28 @@
 const { getStore } = require("@netlify/blobs");
 const crypto = require("crypto");
 
+function getCookie(event, name) {
+  const cookieHeader =
+    event.headers?.cookie ||
+    event.headers?.Cookie ||
+    "";
+
+  const cookies = cookieHeader.split(";");
+
+  for (const cookie of cookies) {
+    const [key, ...valueParts] = cookie.trim().split("=");
+
+    if (key === name) {
+      return decodeURIComponent(valueParts.join("="));
+    }
+  }
+
+  return "";
+}
+
 exports.handler = async (event) => {
   const headers = {
-    "Content-Type": "application/json",
+    "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store"
   };
 
@@ -11,64 +30,91 @@ exports.handler = async (event) => {
     return {
       statusCode: 405,
       headers,
-      body: JSON.stringify({ error: "Method not allowed" })
+      body: JSON.stringify({
+        error: "Method not allowed"
+      })
     };
   }
 
   try {
-    const body = JSON.parse(event.body || "{}");
-    const token = String(body.token || "").trim();
+    const browserSession = getCookie(
+      event,
+      "aurex_session"
+    );
 
-    if (!/^[a-f0-9]{64}$/i.test(token)) {
+    if (!/^[a-f0-9]{64}$/i.test(browserSession)) {
       return {
         statusCode: 403,
         headers,
-        body: JSON.stringify({ error: "Accès invalide" })
+        body: JSON.stringify({
+          error: "Accès invalide"
+        })
       };
     }
 
-    const tokenHash = crypto
+    const browserSessionHash = crypto
       .createHash("sha256")
-      .update(token)
+      .update(browserSession)
       .digest("hex");
 
     const store = getStore("aurex-access");
-    const tokenData = await store.get(`token:${tokenHash}`, {
-      type: "json"
-    });
 
-    if (!tokenData || !tokenData.clientId) {
+    const sessionData = await store.get(
+      `session:${browserSessionHash}`,
+      { type: "json" }
+    );
+
+    if (
+      !sessionData ||
+      !sessionData.clientId ||
+      !sessionData.expiresAt ||
+      Date.now() > Number(sessionData.expiresAt)
+    ) {
       return {
         statusCode: 403,
         headers,
-        body: JSON.stringify({ error: "Accès invalide ou expiré" })
+        body: JSON.stringify({
+          error: "Session expirée ou invalide"
+        })
       };
     }
 
-    const client = await store.get(`client:${tokenData.clientId}`, {
-      type: "json"
-    });
+    const client = await store.get(
+      `client:${sessionData.clientId}`,
+      { type: "json" }
+    );
 
-    if (!client || client.activeTokenHash !== tokenHash) {
+    if (!client) {
       return {
         statusCode: 403,
         headers,
-        body: JSON.stringify({ error: "Session remplacée ou inactive" })
+        body: JSON.stringify({
+          error: "Client introuvable"
+        })
       };
     }
 
-    const sessionId = String(client.checkoutSessionId || "");
+    const checkoutSessionId =
+      String(client.checkoutSessionId || "");
 
-    const stripeKey = sessionId.startsWith("cs_test_")
-      ? process.env.STRIPE_TEST_SECRET_KEY
-      : process.env.STRIPE_SECRET_KEY;
+    const stripeKey =
+      checkoutSessionId.startsWith("cs_test_")
+        ? process.env.STRIPE_TEST_SECRET_KEY
+        : process.env.STRIPE_SECRET_KEY;
 
-    if (!stripeKey || !sessionId.startsWith("cs_")) {
-      throw new Error("Stripe configuration missing");
+    if (
+      !stripeKey ||
+      !checkoutSessionId.startsWith("cs_")
+    ) {
+      throw new Error(
+        "Stripe configuration missing"
+      );
     }
 
     const response = await fetch(
-      `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}?expand[]=subscription`,
+      `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(
+        checkoutSessionId
+      )}?expand[]=subscription`,
       {
         headers: {
           Authorization: `Bearer ${stripeKey}`
@@ -76,19 +122,29 @@ exports.handler = async (event) => {
       }
     );
 
-    const session = await response.json();
+    const stripeSession = await response.json();
+
+    const subscription =
+      stripeSession.subscription &&
+      typeof stripeSession.subscription === "object"
+        ? stripeSession.subscription
+        : null;
 
     if (
       !response.ok ||
-      session.mode !== "subscription" ||
-      session.status !== "complete" ||
-      !session.subscription ||
-      !["active", "trialing"].includes(session.subscription.status)
+      stripeSession.mode !== "subscription" ||
+      stripeSession.status !== "complete" ||
+      !subscription ||
+      !["active", "trialing"].includes(
+        subscription.status
+      )
     ) {
       return {
         statusCode: 403,
         headers,
-        body: JSON.stringify({ error: "Abonnement inactif" })
+        body: JSON.stringify({
+          error: "Abonnement inactif"
+        })
       };
     }
 
@@ -106,7 +162,9 @@ exports.handler = async (event) => {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: "Erreur serveur" })
+      body: JSON.stringify({
+        error: "Erreur serveur"
+      })
     };
   }
 };
