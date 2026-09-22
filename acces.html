@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Accès client — AUREX AI</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #050505;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 520px;
+      border: 1px solid #252525;
+      border-radius: 24px;
+      padding: 32px 24px;
+      background: #0b0b0b;
+      text-align: center;
+    }
+
+    .logo {
+      color: #00e6c3;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: 34px;
+      margin: 0 0 16px;
+    }
+
+    p {
+      color: #bdbdbd;
+      line-height: 1.6;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px;
+      margin-top: 12px;
+      border-radius: 12px;
+      border: 1px solid #333;
+      background: #111;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 14px;
+      padding: 16px;
+      border: 0;
+      border-radius: 12px;
+      background: #00e6c3;
+      color: #000;
+      font-weight: 800;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    #message {
+      min-height: 24px;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="card">
+    <div class="logo">AUREX AI</div>
+
+    <h1>Accès à votre assistant</h1>
+
+    <p>
+      Connectez-vous avec l’adresse e-mail utilisée pour votre abonnement
+      AUREX AI.
+    </p>
+
+    <form id="loginForm">
+      <input
+        id="email"
+        type="email"
+        autocomplete="email"
+        placeholder="Votre adresse e-mail"
+        required
+      >
+
+      <button id="loginButton" type="submit">
+        Accéder à mon assistant
+      </button>
+    </form>
+
+    <div id="message"></div>
+  </main>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session_id") || "";
+
+    const form = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const button = document.getElementById("loginButton");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const email = emailInput.value.trim().toLowerCase();
+
+      if (!email) return;
+
+      button.disabled = true;
+      message.textContent = "Vérification de votre accès...";
+
+      try {
+        const response = await fetch("/.netlify/functions/login-access", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "same-origin",
+          body: JSON.stringify({
+            email,
+            session_id: sessionId
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          message.textContent =
+            data.error || "Impossible de vérifier votre accès.";
+          return;
+        }
+
+        message.textContent = "Accès autorisé. Ouverture de votre assistant...";
+
+        window.location.replace("/chatbot.html");
+      } catch (error) {
+        message.textContent =
+          "Une erreur est survenue. Réessayez dans quelques instants.";
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
