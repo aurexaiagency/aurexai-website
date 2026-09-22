@@ -445,7 +445,7 @@
 
   let history = [];
   let requestType = "prospect";
-
+const token = new URLSearchParams(window.location.search).get("token") || "";
   function addMessage(text, role) {
     const div =
       document.createElement("div");
@@ -582,7 +582,7 @@
                 "application/json"
             },
             body: JSON.stringify({
-              sessionId,
+              token,
               message,
               history: previousHistory
             })
