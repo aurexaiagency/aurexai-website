@@ -542,16 +542,22 @@
 
       if (!message) return;
 
-      if (
-        !sessionId ||
-        !sessionId.startsWith("cs_")
-      ) {
-        addMessage(
-          "Votre accès à cet assistant est invalide.",
-          "assistant"
-        );
-        return;
-      }
+      if (!sessionId) {
+  addMessage(
+    "Votre accès à cet assistant est invalide.",
+    "assistant"
+  );
+  return;
+}
+        
+        
+      
+        
+          
+          
+        
+        
+      
 
       addMessage(message, "user");
 
