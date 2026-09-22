@@ -30,28 +30,55 @@ exports.handler = async (event) => {
         ? body.history.slice(-12)
         : [];
 
-    if (
-      !sessionId ||
-      !sessionId.startsWith("cs_")
-    ) {
-      return {
-        statusCode: 400,
-        headers: jsonHeaders,
-        body: JSON.stringify({
-          error: "Session client invalide"
-        })
-      };
-    }
+    const token = String(body.token || "").trim();
 
-    if (!message) {
-      return {
-        statusCode: 400,
-        headers: jsonHeaders,
-        body: JSON.stringify({
-          error: "Message manquant"
-        })
-      };
-    }
+if (!/^[a-f0-9]{64}$/i.test(token)) {
+  return {
+    statusCode: 403,
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      error: "Accès client invalide"
+    })
+  };
+}
+
+const tokenHash = crypto
+  .createHash("sha256")
+  .update(token)
+  .digest("hex");
+
+const store = getStore("aurex-access");
+
+const tokenData = await store.get(`token:${tokenHash}`, {
+  type: "json"
+});
+
+if (!tokenData || !tokenData.clientId) {
+  return {
+    statusCode: 403,
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      error: "Accès invalide ou expiré"
+    })
+  };
+}
+
+const client = await store.get(`client:${tokenData.clientId}`, {
+  type: "json"
+});
+
+if (!client || client.activeTokenHash !== tokenHash) {
+  return {
+    statusCode: 403,
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      error: "Session remplacée ou inactive"
+    })
+  };
+}
+
+const sessionId = String(client.checkoutSessionId || "");
+    
 
     /*
       On conserve le système Stripe
