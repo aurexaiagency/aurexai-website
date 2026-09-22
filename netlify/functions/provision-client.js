@@ -558,8 +558,10 @@ exports.handler = async function (event) {
       statusCode: 303,
       headers: {
         Location:
-          "/chatbot.html?session_id=" +
-          encodeURIComponent(sessionId),
+  "/acces.html?session_id=" +
+  encodeURIComponent(sessionId),
+          
+          
         "Cache-Control": "no-store"
       },
       body: ""
