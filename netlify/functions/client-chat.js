@@ -1,3 +1,6 @@
+const { getStore } = require("@netlify/blobs");
+const crypto = require("crypto");
+
 exports.handler = async (event) => {
   const jsonHeaders = {
     "Content-Type": "application/json; charset=utf-8",
@@ -17,69 +20,62 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
 
-    const sessionId =
-      String(body.sessionId || "").trim();
+    const message = String(body.message || "")
+      .trim()
+      .slice(0, 1600);
 
-    const message =
-      String(body.message || "")
-        .trim()
-        .slice(0, 1600);
-
-    const history =
-      Array.isArray(body.history)
-        ? body.history.slice(-12)
-        : [];
+    const history = Array.isArray(body.history)
+      ? body.history.slice(-12)
+      : [];
 
     const token = String(body.token || "").trim();
 
-if (!/^[a-f0-9]{64}$/i.test(token)) {
-  return {
-    statusCode: 403,
-    headers: jsonHeaders,
-    body: JSON.stringify({
-      error: "Accès client invalide"
-    })
-  };
-}
+    if (!/^[a-f0-9]{64}$/i.test(token)) {
+      return {
+        statusCode: 403,
+        headers: jsonHeaders,
+        body: JSON.stringify({
+          error: "Accès client invalide"
+        })
+      };
+    }
 
-const tokenHash = crypto
-  .createHash("sha256")
-  .update(token)
-  .digest("hex");
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
 
-const store = getStore("aurex-access");
+    const store = getStore("aurex-access");
 
-const tokenData = await store.get(`token:${tokenHash}`, {
-  type: "json"
-});
+    const tokenData = await store.get(`token:${tokenHash}`, {
+      type: "json"
+    });
 
-if (!tokenData || !tokenData.clientId) {
-  return {
-    statusCode: 403,
-    headers: jsonHeaders,
-    body: JSON.stringify({
-      error: "Accès invalide ou expiré"
-    })
-  };
-}
+    if (!tokenData || !tokenData.clientId) {
+      return {
+        statusCode: 403,
+        headers: jsonHeaders,
+        body: JSON.stringify({
+          error: "Accès invalide ou expiré"
+        })
+      };
+    }
 
-const client = await store.get(`client:${tokenData.clientId}`, {
-  type: "json"
-});
+    const client = await store.get(`client:${tokenData.clientId}`, {
+      type: "json"
+    });
 
-if (!client || client.activeTokenHash !== tokenHash) {
-  return {
-    statusCode: 403,
-    headers: jsonHeaders,
-    body: JSON.stringify({
-      error: "Session remplacée ou inactive"
-    })
-  };
-}
+    if (!client || client.activeTokenHash !== tokenHash) {
+      return {
+        statusCode: 403,
+        headers: jsonHeaders,
+        body: JSON.stringify({
+          error: "Session remplacée ou inactive"
+        })
+      };
+    }
 
-const sessionId = String(client.checkoutSessionId || "");
-    
-
+    const sessionId = String(client.checkoutSessionId || "");
     /*
       On conserve le système Stripe
       TEST / LIVE qui fonctionne déjà.
