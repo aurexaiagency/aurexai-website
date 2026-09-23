@@ -1,3 +1,5 @@
+const { getStore } = require("@netlify/blobs");
+const crypto = require("crypto");
 exports.handler = async (event) => {
   const headers = {
     "Content-Type": "application/json; charset=utf-8",
@@ -31,7 +33,81 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
 
-    const sessionId = clean(body.sessionId, 500);
+    const cookieHeader =
+  event.headers?.cookie ||
+  event.headers?.Cookie ||
+  "";
+
+const sessionCookie = cookieHeader
+  .split(";")
+  .map((part) => part.trim())
+  .find((part) =>
+    part.startsWith("aurex_session=")
+  );
+
+const browserSession = sessionCookie
+  ? decodeURIComponent(
+      sessionCookie.slice(
+        "aurex_session=".length
+      )
+    )
+  : "";
+
+if (!/^[a-f0-9]{64}$/i.test(browserSession)) {
+  return reply(403, {
+    success: false,
+    error: "Accès client invalide"
+  });
+}
+
+const browserSessionHash = crypto
+  .createHash("sha256")
+  .update(browserSession)
+  .digest("hex");
+
+const store = getStore("aurex-access");
+
+const browserSessionData = await store.get(
+  `session:${browserSessionHash}`,
+  { type: "json" }
+);
+
+if (
+  !browserSessionData?.clientId ||
+  !browserSessionData.expiresAt ||
+  browserSessionData.expiresAt <= Date.now()
+) {
+  return reply(403, {
+    success: false,
+    error: "Session expirée ou invalide"
+  });
+}
+
+const client = await store.get(
+  `client:${browserSessionData.clientId}`,
+  { type: "json" }
+);
+
+if (!client) {
+  return reply(403, {
+    success: false,
+    error: "Accès client introuvable"
+  });
+}
+
+if (
+  client.activeBrowserSessionHash &&
+  client.activeBrowserSessionHash !== browserSessionHash
+) {
+  return reply(403, {
+    success: false,
+    error: "Cette session a été remplacée"
+  });
+}
+
+const sessionId = String(
+  client.checkoutSessionId || ""
+);
     const type = clean(body.type, 50).toLowerCase();
 
     const allowedTypes = [
