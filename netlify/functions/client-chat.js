@@ -28,53 +28,88 @@ exports.handler = async (event) => {
       ? body.history.slice(-12)
       : [];
 
-    const token = String(body.token || "").trim();
+  const cookieHeader =
+  event.headers?.cookie ||
+  event.headers?.Cookie ||
+  "";
 
-    if (!/^[a-f0-9]{64}$/i.test(token)) {
-      return {
-        statusCode: 403,
-        headers: jsonHeaders,
-        body: JSON.stringify({
-          error: "Accès client invalide"
-        })
-      };
-    }
+const sessionCookie = cookieHeader
+  .split(";")
+  .map((part) => part.trim())
+  .find((part) =>
+    part.startsWith("aurex_session=")
+  );
 
-    const tokenHash = crypto
-      .createHash("sha256")
-      .update(token)
-      .digest("hex");
+const browserSession = sessionCookie
+  ? decodeURIComponent(
+      sessionCookie.slice(
+        "aurex_session=".length
+      )
+    )
+  : "";
 
-    const store = getStore("aurex-access");
+if (!/^[a-f0-9]{64}$/i.test(browserSession)) {
+  return {
+    statusCode: 403,
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      error: "Accès client invalide"
+    })
+  };
+}
 
-    const tokenData = await store.get(`token:${tokenHash}`, {
-      type: "json"
-    });
+const browserSessionHash = crypto
+  .createHash("sha256")
+  .update(browserSession)
+  .digest("hex");
 
-    if (!tokenData || !tokenData.clientId) {
-      return {
-        statusCode: 403,
-        headers: jsonHeaders,
-        body: JSON.stringify({
-          error: "Accès invalide ou expiré"
-        })
-      };
-    }
+const store = getStore("aurex-access");
 
-    const client = await store.get(`client:${tokenData.clientId}`, {
-      type: "json"
-    });
+const browserSessionData = await store.get(
+  `session:${browserSessionHash}`,
+  { type: "json" }
+);
 
-    if (!client || client.activeTokenHash !== tokenHash) {
-      return {
-        statusCode: 403,
-        headers: jsonHeaders,
-        body: JSON.stringify({
-          error: "Session remplacée ou inactive"
-        })
-      };
-    }
+if (
+  !browserSessionData?.clientId ||
+  !browserSessionData.expiresAt ||
+  browserSessionData.expiresAt <= Date.now()
+) {
+  return {
+    statusCode: 403,
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      error: "Session expirée ou invalide"
+    })
+  };
+}
 
+const client = await store.get(
+  `client:${browserSessionData.clientId}`,
+  { type: "json" }
+);
+
+if (!client) {
+  return {
+    statusCode: 403,
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      error: "Accès client introuvable"
+    })
+  };
+}
+if (
+  client.activeBrowserSessionHash &&
+  client.activeBrowserSessionHash !== browserSessionHash
+) {
+  return {
+    statusCode: 403,
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      error: "Cette session a été remplacée par une nouvelle connexion"
+    })
+  };
+}
     const sessionId = String(client.checkoutSessionId || "");
     /*
       On conserve le système Stripe
