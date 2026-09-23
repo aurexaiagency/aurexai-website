@@ -104,7 +104,11 @@ exports.handler = async (event) => {
       createdAt: new Date().toISOString(),
       expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000
     });
-
+await store.setJSON(`client:${tokenData.clientId}`, {
+  ...client,
+  activeBrowserSessionHash: browserSessionHash,
+  updatedAt: new Date().toISOString()
+});
     return {
       statusCode: 200,
       headers: {
