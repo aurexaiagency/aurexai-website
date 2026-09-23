@@ -395,11 +395,7 @@
 </div>
 
 <script>
-  const params =
-    new URLSearchParams(location.search);
-
-  const sessionId =
-    params.get("session_id") || "";
+  
 
   const messages =
     document.getElementById("messages");
@@ -581,8 +577,9 @@ const token = new URLSearchParams(window.location.search).get("token") || "";
               "Content-Type":
                 "application/json"
             },
+            credentials: "same-origin",
             body: JSON.stringify({
-              token,
+              
               message,
               history: previousHistory
             })
@@ -708,7 +705,7 @@ const token = new URLSearchParams(window.location.search).get("token") || "";
 
       try {
         const payload = {
-          sessionId,
+          
           type: requestType,
 
           nom:
@@ -760,6 +757,7 @@ const token = new URLSearchParams(window.location.search).get("token") || "";
               "Content-Type":
                 "application/json"
             },
+           credentials: "same-origin",
             body: JSON.stringify(payload)
           }
         );
@@ -816,25 +814,50 @@ const token = new URLSearchParams(window.location.search).get("token") || "";
     }
   );
 
-  if (
-    !sessionId ||
-    !sessionId.startsWith("cs_")
-  ) {
-    status.textContent =
-      "● Accès invalide";
+  (async function verifyClientAccess() {
+  setChatEnabled(false);
 
-    setChatEnabled(false);
-
-    addMessage(
-      "Ce lien d'accès au chatbot est invalide.",
-      "assistant"
+  try {
+    const response = await fetch(
+      "/.netlify/functions/verify-access",
+      {
+        method: "POST",
+        credentials: "same-origin"
+      }
     );
-  } else {
+
+    const data = await response.json();
+
+    if (!response.ok || data.ok !== true) {
+      status.textContent = "● Accès invalide";
+
+      addMessage(
+        data.error ||
+        "Votre accès à cet assistant est invalide ou expiré.",
+        "assistant"
+      );
+
+      return;
+    }
+
+    status.textContent = "● Assistant disponible";
+
     addMessage(
       "Bonjour 👋 Comment puis-je vous aider ?",
       "assistant"
     );
+
+    setChatEnabled(true);
+
+  } catch (error) {
+    status.textContent = "● Assistant indisponible";
+
+    addMessage(
+      "Impossible de vérifier votre accès. Veuillez réessayer.",
+      "assistant"
+    );
   }
+})();
 </script>
 
 </body>
