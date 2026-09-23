@@ -115,7 +115,7 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session_id") || "";
+    const token = params.get("token") || "";
 
     const form = document.getElementById("loginForm");
     const emailInput = document.getElementById("email");
@@ -139,10 +139,9 @@
             "Content-Type": "application/json"
           },
           credentials: "same-origin",
-          body: JSON.stringify({
-            email,
-            session_id: sessionId
-          })
+        body: JSON.stringify({
+  token
+})  
         });
 
         const data = await response.json().catch(() => ({}));
