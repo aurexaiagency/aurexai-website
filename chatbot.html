@@ -441,7 +441,7 @@
 
   let history = [];
   let requestType = "prospect";
-const token = new URLSearchParams(window.location.search).get("token") || "";
+
   function addMessage(text, role) {
     const div =
       document.createElement("div");
@@ -538,13 +538,7 @@ const token = new URLSearchParams(window.location.search).get("token") || "";
 
       if (!message) return;
 
-      if (!sessionId) {
-  addMessage(
-    "Votre accès à cet assistant est invalide.",
-    "assistant"
-  );
-  return;
-}
+      
         
         
       
