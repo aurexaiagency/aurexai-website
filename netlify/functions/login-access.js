@@ -18,7 +18,9 @@ exports.handler = async (event) => {
   try {
     const body = JSON.parse(event.body || "{}");
     const token = String(body.token || "").trim();
-
+const email = String(body.email || "")
+  .trim()
+  .toLowerCase();
     if (!/^[a-f0-9]{64}$/i.test(token)) {
       return {
         statusCode: 403,
@@ -57,7 +59,18 @@ exports.handler = async (event) => {
         body: JSON.stringify({ error: "Accès remplacé ou inactif" })
       };
     }
-
+if (
+  !email ||
+  String(client.email || "").trim().toLowerCase() !== email
+) {
+  return {
+    statusCode: 403,
+    headers: jsonHeaders,
+    body: JSON.stringify({
+      error: "Adresse e-mail incorrecte"
+    })
+  };
+}
     const sessionId = String(client.checkoutSessionId || "");
 
     const stripeKey = sessionId.startsWith("cs_test_")
