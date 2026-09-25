@@ -367,7 +367,18 @@ exports.handler = async function (event) {
           "Impossible de vérifier ce paiement."
       };
     }
+const stripeEmail = String(
+  session.customer_details?.email ||
+  session.customer_email ||
+  ""
+).trim().toLowerCase();
 
+if (!stripeEmail || stripeEmail !== email.toLowerCase()) {
+  return {
+    statusCode: 403,
+    body: "L'adresse e-mail ne correspond pas à celle utilisée pour l'abonnement."
+  };
+}
     const subscription =
       session.subscription &&
       typeof session.subscription === "object"
