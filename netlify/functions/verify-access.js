@@ -93,7 +93,18 @@ exports.handler = async (event) => {
         })
       };
     }
-
+if (
+  client.activeBrowserSessionHash &&
+  client.activeBrowserSessionHash !== browserSessionHash
+) {
+  return {
+    statusCode: 403,
+    headers,
+    body: JSON.stringify({
+      error: "Cette session a été remplacée par une nouvelle connexion"
+    })
+  };
+}
     const checkoutSessionId =
       String(client.checkoutSessionId || "");
 
